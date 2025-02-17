@@ -28,8 +28,8 @@ const Button = ({ handlePress, symbolName }: CircleButtonProps) => {
       style={[
         {
           backgroundColor: iOSColors.blue,
-          minWidth: width * (1 / 6),
-          minHeight: width * (1 / 6),
+          minWidth: width / 6,
+          minHeight: width / 6,
           borderRadius: "100%",
           alignItems: "center",
           justifyContent: "center",
@@ -38,7 +38,7 @@ const Button = ({ handlePress, symbolName }: CircleButtonProps) => {
     >
       <SymbolView
         name={symbolName}
-        size={(width * (1 / 6)) / 2.5}
+        size={width / 6 / 2.5}
         tintColor={iOSColors.white}
       />
     </Pressable>
@@ -104,8 +104,8 @@ export default function NotFoundScreen() {
           <Pressable
             style={{
               backgroundColor: iOSColors.blue,
-              width: width * (1 / 2),
-              height: width * (1 / 2),
+              width: width / 2,
+              height: width / 2,
               borderRadius: "100%",
               alignItems: "center",
               justifyContent: "center",
