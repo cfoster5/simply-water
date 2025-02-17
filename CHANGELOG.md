@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/cfoster5/simply-water/compare/v1.0.0...v1.1.0) (2025-02-17)
+
+
+### Features
+
+* Add localization for metric system ([552bcef](https://github.com/cfoster5/simply-water/commit/552bcef689b5dc5e1623e9e263209dda86063f50))
+
+
+### Bug Fixes
+
+* Add SafeAreaProvider ([1881e6e](https://github.com/cfoster5/simply-water/commit/1881e6ec6026066d8b1143a20fc514e3f0d792a6))
+
 ## 1.0.0 (2025-02-16)
 
 
