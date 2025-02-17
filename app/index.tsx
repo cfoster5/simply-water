@@ -13,6 +13,8 @@ import { useIntakeStore } from "@/stores/store";
 import { SymbolView } from "expo-symbols";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
+import { useLocales } from "expo-localization";
+
 
 const Button = ({ handlePress, symbolName, style }) => (
   <Pressable
@@ -39,6 +41,7 @@ const Button = ({ handlePress, symbolName, style }) => (
 
 export default function NotFoundScreen() {
   const { width } = useWindowDimensions();
+  const [locale] = useLocales();
   const screenPadding = 96;
   const circleHeight = width - screenPadding * 2;
   // const [entryAmount, setEntryAmount] = useState(8);
@@ -122,7 +125,8 @@ export default function NotFoundScreen() {
           >
             {/* <Text style={iOSUIKit.bodyWhite}>You've had</Text> */}
             <Text style={iOSUIKit.largeTitleEmphasizedWhite}>
-              {totalAmount}oz
+              {totalAmount}
+              {locale.measurementSystem === "metric" ? "ml" : "oz"}
             </Text>
             <Text style={iOSUIKit.bodyWhite}>today</Text>
           </Pressable>
