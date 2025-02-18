@@ -1,8 +1,10 @@
+import { version } from "./package.json";
+
 export default {
   expo: {
     name: "Simply Water",
     slug: "water",
-    version: "1.1.0",
+    version: version,
     orientation: "portrait",
     icon: "./assets/images/icon.png",
     scheme: "myapp",
