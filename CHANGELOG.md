@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/cfoster5/simply-water/compare/v1.1.0...v1.2.0) (2025-02-18)
+
+
+### Features
+
+* Add RN Firebase and Analytics ([a65b0eb](https://github.com/cfoster5/simply-water/commit/a65b0ebf80b1582c04c535bd28abc51eb82bc6b8))
+
 ## [1.1.0](https://github.com/cfoster5/simply-water/compare/v1.0.0...v1.1.0) (2025-02-17)
 
 
