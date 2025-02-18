@@ -4,7 +4,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack, usePathname } from "expo-router";
+import { Stack, useGlobalSearchParams, usePathname } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
@@ -23,6 +23,7 @@ export default function RootLayout() {
   useMMKVDevTools();
 
   const pathname = usePathname();
+  const params = useGlobalSearchParams();
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
@@ -34,12 +35,19 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  // Track the location in your analytics provider here.
   useEffect(() => {
-    analytics().logScreenView({
-      screen_name: pathname,
-    });
-  }, [pathname]);
+    const logScreenView = async () => {
+      try {
+        await analytics().logScreenView({
+          screen_name: pathname,
+          screen_class: pathname,
+        });
+      } catch (err: any) {
+        console.error(err);
+      }
+    };
+    logScreenView();
+  }, [pathname, params]);
 
   if (!loaded) {
     return null;
