@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.1](https://github.com/cfoster5/simply-water/compare/v1.2.0...v1.2.1) (2025-02-18)
+
+
+### Bug Fixes
+
+* **ci:** Fix release-please version bump by importing app version from package.json after migration to app.config.js ([111ec08](https://github.com/cfoster5/simply-water/commit/111ec080a074ea4ddc271f203ef5cf113b8fdd08))
+* Update analytics logging by adding global search parameters and error handling ([5c6e2dc](https://github.com/cfoster5/simply-water/commit/5c6e2dc19c4817f3ddc1f866e724cb37f8932f76))
+
 ## [1.2.0](https://github.com/cfoster5/simply-water/compare/v1.1.0...v1.2.0) (2025-02-18)
 
 
