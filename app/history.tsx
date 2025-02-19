@@ -14,7 +14,7 @@ export default function NotFoundScreen() {
     <>
       <Stack.Screen
         options={{
-          title: "Previous Entries",
+          title: "History",
           headerBackButtonDisplayMode: "minimal",
         }}
       />

@@ -74,7 +74,7 @@ export default function NotFoundScreen() {
             paddingRight: 24,
           }}
         >
-          <Link href="/previousEntries" asChild>
+          <Link href="/history" asChild>
             <Pressable
               style={{
                 backgroundColor: iOSColors.blue,
