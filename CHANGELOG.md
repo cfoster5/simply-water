@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/cfoster5/simply-water/compare/v1.3.0...v1.3.1) (2025-02-21)
+
+
+### Bug Fixes
+
+* Correct import path for Colors and update splash icon path in app config ([9a191bc](https://github.com/cfoster5/simply-water/commit/9a191bcc22334d8953ff297022b42c85df5241bd))
+
 ## [1.3.0](https://github.com/cfoster5/simply-water/compare/v1.2.1...v1.3.0) (2025-02-21)
 
 
