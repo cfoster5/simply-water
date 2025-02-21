@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/cfoster5/simply-water/compare/v1.2.1...v1.3.0) (2025-02-21)
+
+
+### Features
+
+* Update app config to use dynamic background colors for light and dark themes ([6719685](https://github.com/cfoster5/simply-water/commit/6719685b1121cfaa1ac35b4277bc90f2c132a71c))
+
 ## [1.2.1](https://github.com/cfoster5/simply-water/compare/v1.2.0...v1.2.1) (2025-02-18)
 
 
