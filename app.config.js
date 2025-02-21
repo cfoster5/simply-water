@@ -1,4 +1,5 @@
 import { version } from "./package.json";
+import { Colors } from "./constants/Colors";
 
 export default {
   expo: {
@@ -39,7 +40,11 @@ export default {
           image: "./assets/images/splash-icon.png",
           imageWidth: 200,
           resizeMode: "contain",
-          backgroundColor: "#ffffff",
+          backgroundColor: Colors.light.background,
+          dark: {
+            image: "./assets/splash-icon.png",
+            backgroundColor: Colors.dark.background,
+          },
         },
       ],
       "expo-localization",
