@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/cfoster5/simply-water/compare/v1.3.2...v1.4.0) (2025-03-17)
+
+
+### Features
+
+* Display intake history with date grouping ([6d5551f](https://github.com/cfoster5/simply-water/commit/6d5551f350850b175297ba545daffe1051a438c2))
+
 ## [1.3.2](https://github.com/cfoster5/simply-water/compare/v1.3.1...v1.3.2) (2025-03-17)
 
 
