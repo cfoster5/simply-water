@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.2](https://github.com/cfoster5/simply-water/compare/v1.3.1...v1.3.2) (2025-03-17)
+
+
+### Bug Fixes
+
+* Correct scroll bar positioning not taking full height ([c8b5a71](https://github.com/cfoster5/simply-water/commit/c8b5a71966fd502d902683f9e1c22aa5fe66b9d0))
+
 ## [1.3.1](https://github.com/cfoster5/simply-water/compare/v1.3.0...v1.3.1) (2025-02-21)
 
 
