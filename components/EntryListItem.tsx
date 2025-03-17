@@ -1,12 +1,11 @@
+import { useLocales } from "expo-localization";
 import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
-import { ThemedText } from "./ThemedText";
-import { useLocales } from "expo-localization";
-
-export const EntryListItem = ({ item }) => {
+export const EntryListItem = ({ item, isFirstItem, isLastItem }) => {
   const [locale] = useLocales();
   return (
+    // Style extracted from Figma
     <Pressable
       style={{
         flex: 1,
@@ -14,29 +13,36 @@ export const EntryListItem = ({ item }) => {
         justifyContent: "space-between",
         alignItems: "center",
         paddingVertical: 12,
-        backgroundColor: PlatformColor("systemGray6"),
+        backgroundColor: PlatformColor("secondarySystemGroupedBackground"),
         borderColor: PlatformColor("separator"),
-        borderBottomWidth: StyleSheet.hairlineWidth,
-        paddingHorizontal: 24,
+        borderBottomWidth: !isLastItem ? StyleSheet.hairlineWidth : 0,
+        paddingHorizontal: 16,
+        borderTopLeftRadius: isFirstItem ? 10 : 0,
+        borderTopRightRadius: isFirstItem ? 10 : 0,
+        borderBottomLeftRadius: isLastItem ? 10 : 0,
+        borderBottomRightRadius: isLastItem ? 10 : 0,
       }}
     >
       <View>
-        <ThemedText>{item.date}</ThemedText>
         <Text
-          style={{
-            ...iOSUIKit.footnoteEmphasizedObject,
-            color: PlatformColor("systemGray"),
-          }}
+          style={[
+            iOSUIKit.body,
+            {
+              color: PlatformColor("label"),
+            },
+          ]}
         >
           {item.time}
         </Text>
       </View>
       <View style={{ alignItems: "center" }}>
         <Text
-          style={{
-            ...iOSUIKit.title3EmphasizedObject,
-            color: PlatformColor("systemBlue"),
-          }}
+          style={[
+            iOSUIKit.body,
+            {
+              color: PlatformColor("secondaryLabel"),
+            },
+          ]}
         >
           {item.amount} {locale.measurementSystem === "metric" ? "ml" : "oz"}
         </Text>
