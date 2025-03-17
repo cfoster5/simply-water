@@ -31,7 +31,7 @@ export default function NotFoundScreen() {
             type="default"
             style={{ textAlign: "center", marginTop: 24 }}
           >
-            Press the + button to add entries!
+          Press the + button on the last screen to add entries!
           </ThemedText>
         )}
       />
