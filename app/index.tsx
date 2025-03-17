@@ -76,13 +76,21 @@ export default function NotFoundScreen() {
         >
           <Link href="/history" asChild>
             <Pressable
+            // Style extracted from Figma
               style={{
-                backgroundColor: iOSColors.blue,
+              flexDirection: "row",
+              // Use tertiarySystemBackground if a grey background is wanted
+              // Because background is already grey, don't use secondarySystemBackground
+              // backgroundColor: PlatformColor("tertiarySystemBackground"),
+              backgroundColor: PlatformColor("systemBlue"),
                 minWidth: 44,
                 minHeight: 44,
-                borderRadius: "100%",
+              borderRadius: 40,
+              paddingHorizontal: 14,
+              paddingVertical: 7,
                 alignItems: "center",
                 justifyContent: "center",
+              gap: 4,
               }}
             >
               <SymbolView
@@ -90,6 +98,9 @@ export default function NotFoundScreen() {
                 size={iOSUIKit.bodyObject.lineHeight}
                 tintColor={iOSColors.white}
               />
+            <Text style={[iOSUIKit.body, { color: iOSColors.white }]}>
+              History
+            </Text>
             </Pressable>
           </Link>
         </SafeAreaView>
