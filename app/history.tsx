@@ -1,12 +1,13 @@
-import { Stack } from "expo-router";
+import { FlatList } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { EntryListItem } from "@/components/EntryListItem";
 import { ThemedText } from "@/components/ThemedText";
 import { useIntakeStore } from "@/stores/store";
-import { FlatList } from "react-native";
 
 export default function NotFoundScreen() {
   const { entries } = useIntakeStore();
+  const { bottom } = useSafeAreaInsets();
 
   const reversedEntries = [...entries].reverse();
 
@@ -21,6 +22,10 @@ export default function NotFoundScreen() {
       <FlatList
         data={reversedEntries}
         renderItem={({ item }) => <EntryListItem item={item} />}
+      automaticallyAdjustsScrollIndicatorInsets
+      contentInsetAdjustmentBehavior="automatic"
+      contentInset={{ bottom: bottom }}
+      scrollIndicatorInsets={{ bottom: bottom }}
         ListEmptyComponent={() => (
           <ThemedText
             type="default"
