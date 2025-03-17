@@ -12,29 +12,21 @@ export default function NotFoundScreen() {
   const reversedEntries = [...entries].reverse();
 
   return (
-    <>
-      <Stack.Screen
-        options={{
-          title: "History",
-          headerBackButtonDisplayMode: "minimal",
-        }}
-      />
-      <FlatList
-        data={reversedEntries}
-        renderItem={({ item }) => <EntryListItem item={item} />}
+    <FlatList
+      data={reversedEntries}
+      renderItem={({ item }) => <EntryListItem item={item} />}
       automaticallyAdjustsScrollIndicatorInsets
       contentInsetAdjustmentBehavior="automatic"
       contentInset={{ bottom: bottom }}
       scrollIndicatorInsets={{ bottom: bottom }}
-        ListEmptyComponent={() => (
-          <ThemedText
-            type="default"
-            style={{ textAlign: "center", marginTop: 24 }}
-          >
+      ListEmptyComponent={() => (
+        <ThemedText
+          type="default"
+          style={{ textAlign: "center", marginTop: 24 }}
+        >
           Press the + button on the last screen to add entries!
-          </ThemedText>
-        )}
-      />
-    </>
+        </ThemedText>
+      )}
+    />
   );
 }

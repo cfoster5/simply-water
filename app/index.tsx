@@ -1,19 +1,20 @@
-import { Link, Stack } from "expo-router";
+import { useLocales } from "expo-localization";
+import { Link } from "expo-router";
+import { SFSymbol, SymbolView } from "expo-symbols";
 import {
   Alert,
+  PlatformColor,
   Pressable,
   StyleSheet,
   Text,
   useWindowDimensions,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { iOSColors, iOSUIKit } from "react-native-typography";
 
 import { ThemedView } from "@/components/ThemedView";
 import { useIntakeStore } from "@/stores/store";
-import { SFSymbol, SymbolView } from "expo-symbols";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { iOSColors, iOSUIKit } from "react-native-typography";
-import { useLocales } from "expo-localization";
 
 type CircleButtonProps = {
   handlePress: () => void;
@@ -52,7 +53,7 @@ export default function NotFoundScreen() {
 
   const currentDate = new Date().toLocaleDateString();
 
-  const handleAddEntry = (entryAmount) => {
+  const handleAddEntry = (entryAmount: number) => {
     const time = new Date().toLocaleTimeString();
     const entry = { date: currentDate, time, amount: entryAmount };
     addEntry(entry);
@@ -64,127 +65,124 @@ export default function NotFoundScreen() {
       .reduce((total, entry) => total + entry.amount, 0) || 0;
 
   return (
-    <>
-      <Stack.Screen options={{ title: "Oops!" }} />
-      <ThemedView style={styles.container}>
-        <SafeAreaView
-          style={{
-            flexDirection: "row",
-            justifyContent: "flex-end",
-            paddingRight: 24,
-          }}
-        >
-          <Link href="/history" asChild>
-            <Pressable
+    <ThemedView style={styles.container}>
+      <SafeAreaView
+        style={{
+          flexDirection: "row",
+          justifyContent: "flex-end",
+          paddingRight: 24,
+        }}
+      >
+        <Link href="/history" asChild>
+          <Pressable
             // Style extracted from Figma
-              style={{
+            style={{
               flexDirection: "row",
               // Use tertiarySystemBackground if a grey background is wanted
               // Because background is already grey, don't use secondarySystemBackground
               // backgroundColor: PlatformColor("tertiarySystemBackground"),
               backgroundColor: PlatformColor("systemBlue"),
-                minWidth: 44,
-                minHeight: 44,
+              minWidth: 44,
+              minHeight: 44,
               borderRadius: 40,
               paddingHorizontal: 14,
               paddingVertical: 7,
-                alignItems: "center",
-                justifyContent: "center",
+              alignItems: "center",
+              justifyContent: "center",
               gap: 4,
-              }}
-            >
-              <SymbolView
-                name="list.bullet"
-                size={iOSUIKit.bodyObject.lineHeight}
-                tintColor={iOSColors.white}
-              />
+            }}
+          >
+            <SymbolView
+              name="list.bullet"
+              size={iOSUIKit.bodyObject.lineHeight}
+              tintColor={iOSColors.white}
+            />
             <Text style={[iOSUIKit.body, { color: iOSColors.white }]}>
               History
             </Text>
-            </Pressable>
-          </Link>
-        </SafeAreaView>
-        <View
+          </Pressable>
+        </Link>
+      </SafeAreaView>
+      <View
+        style={{
+          flex: 1,
+          flexGrow: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Pressable
           style={{
-            flex: 1,
-            flexGrow: 1,
+            backgroundColor: iOSColors.blue,
+            width: width / 2,
+            height: width / 2,
+            borderRadius: "100%",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Pressable
-            style={{
-              backgroundColor: iOSColors.blue,
-              width: width / 2,
-              height: width / 2,
-              borderRadius: "100%",
-              alignItems: "center",
-              justifyContent: "center",
+          <Text style={iOSUIKit.largeTitleEmphasizedWhite}>
+            {totalAmount}
+            {locale.measurementSystem === "metric" ? "ml" : "oz"}
+          </Text>
+          <Text style={iOSUIKit.bodyWhite}>today</Text>
+        </Pressable>
+        <SafeAreaView
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            width: "100%",
+          }}
+        >
+          <Button
+            handlePress={() => {
+              Alert.alert(
+                "Reset Today's Entries?",
+                "Are you sure you want to reset today's entries?",
+                [
+                  {
+                    text: "Cancel",
+                    style: "cancel",
+                  },
+                  {
+                    text: "OK",
+                    onPress: resetDailyEntries,
+                  },
+                ]
+              );
             }}
-          >
-            <Text style={iOSUIKit.largeTitleEmphasizedWhite}>
-              {totalAmount}
-              {locale.measurementSystem === "metric" ? "ml" : "oz"}
-            </Text>
-            <Text style={iOSUIKit.bodyWhite}>today</Text>
-          </Pressable>
-          <SafeAreaView
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              width: "100%",
+            symbolName="arrow.clockwise"
+          />
+          <Button
+            handlePress={() => {
+              Alert.prompt(
+                "Enter Amount",
+                null,
+                [
+                  {
+                    text: "Cancel",
+                    style: "cancel",
+                  },
+                  {
+                    text: "OK",
+                    onPress: (amount) => {
+                      const numericAmount = parseInt(amount, 10);
+                      if (!isNaN(numericAmount)) {
+                        handleAddEntry(numericAmount);
+                      }
+                    },
+                  },
+                ],
+                "plain-text",
+                "",
+                "numeric"
+              );
             }}
-          >
-            <Button
-              handlePress={() => {
-                Alert.alert(
-                  "Reset Today's Entries?",
-                  "Are you sure you want to reset today's entries?",
-                  [
-                    {
-                      text: "Cancel",
-                      style: "cancel",
-                    },
-                    {
-                      text: "OK",
-                      onPress: resetDailyEntries,
-                    },
-                  ]
-                );
-              }}
-              symbolName="arrow.clockwise"
-            />
-            <Button
-              handlePress={() => {
-                Alert.prompt(
-                  "Enter Amount",
-                  null,
-                  [
-                    {
-                      text: "Cancel",
-                      style: "cancel",
-                    },
-                    {
-                      text: "OK",
-                      onPress: (amount) => {
-                        const numericAmount = parseInt(amount, 10);
-                        if (!isNaN(numericAmount)) {
-                          handleAddEntry(numericAmount);
-                        }
-                      },
-                    },
-                  ],
-                  "plain-text",
-                  "",
-                  "numeric"
-                );
-              }}
-              symbolName="plus"
-            />
-          </SafeAreaView>
-        </View>
-      </ThemedView>
-    </>
+            symbolName="plus"
+          />
+        </SafeAreaView>
+      </View>
+    </ThemedView>
   );
 }
 
