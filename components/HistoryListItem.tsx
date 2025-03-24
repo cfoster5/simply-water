@@ -2,7 +2,7 @@ import { useLocales } from "expo-localization";
 import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
-export const EntryListItem = ({ item, isFirstItem, isLastItem }) => {
+export const HistoryListItem = ({ item, isFirstItem, isLastItem }) => {
   const [locale] = useLocales();
   return (
     // Style extracted from Figma

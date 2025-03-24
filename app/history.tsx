@@ -2,7 +2,7 @@ import { PlatformColor, SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import { EntryListItem } from "@/components/EntryListItem";
+import { HistoryListItem } from "@/components/HistoryListItem";
 import { useIntakeStore } from "@/stores/store";
 
 export default function NotFoundScreen() {
@@ -53,7 +53,7 @@ export default function NotFoundScreen() {
         const isFirstItem = index === 0;
         const isLastItem = index === section.data.length - 1;
         return (
-          <EntryListItem
+          <HistoryListItem
             item={item}
             isFirstItem={isFirstItem}
             isLastItem={isLastItem}
