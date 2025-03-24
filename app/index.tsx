@@ -1,6 +1,8 @@
 import { useLocales } from "expo-localization";
 import { Link } from "expo-router";
+import * as StoreReview from "expo-store-review";
 import { SFSymbol, SymbolView } from "expo-symbols";
+import { useEffect } from "react";
 import {
   Alert,
   PlatformColor,
@@ -14,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
 import { ThemedView } from "@/components/ThemedView";
+import { useAppConfigStore } from "@/stores/appConfig";
 import { useIntakeStore } from "@/stores/store";
 
 type CircleButtonProps = {
@@ -50,6 +53,20 @@ export default function NotFoundScreen() {
   const { width } = useWindowDimensions();
   const [locale] = useLocales();
   const { addEntry, entries, resetDailyEntries } = useIntakeStore();
+  const { hasRequestedReview, setHasRequestedReview } = useAppConfigStore();
+
+  useEffect(() => {
+    async function requestReview() {
+      if (entries.length >= 5 && !hasRequestedReview) {
+        const isAvailable = await StoreReview.isAvailableAsync();
+        if (isAvailable) {
+          await StoreReview.requestReview();
+          setHasRequestedReview();
+        }
+      }
+    }
+    requestReview();
+  }, [entries.length, hasRequestedReview, setHasRequestedReview]);
 
   const currentDate = new Date().toLocaleDateString();
 
