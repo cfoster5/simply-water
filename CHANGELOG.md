@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/cfoster5/simply-water/compare/v1.4.0...v1.5.0) (2025-03-24)
+
+
+### Features
+
+* Add store review request logic and add app configuration store; closes [#10](https://github.com/cfoster5/simply-water/issues/10) ([ca25351](https://github.com/cfoster5/simply-water/commit/ca253516da3e090a941d3987ec182c5b3f8abae5))
+
 ## [1.4.0](https://github.com/cfoster5/simply-water/compare/v1.3.2...v1.4.0) (2025-03-17)
 
 
