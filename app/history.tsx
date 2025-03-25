@@ -3,26 +3,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { HistoryListItem } from "@/components/HistoryListItem";
+// import { dummyEntries as entries } from "@/constants/dummyEntries";
 import { useIntakeStore } from "@/stores/store";
 
 export default function NotFoundScreen() {
   const { entries } = useIntakeStore();
   const { bottom } = useSafeAreaInsets();
-
-  // const entries = Array.from({ length: 40 }, (_, index) => {
-  //   const day = Math.floor(index / 4) + 1; // Up to 4 entries per day
-  //   const time = `${10 + (index % 4) * 2}:00 AM`; // Different times for entries on the same day
-  //   const date = new Date(2025, 2, day); // March is month 2 (0-indexed)
-  //   return {
-  //     date: date.toLocaleDateString(),
-  //     time: time,
-  //     amount: Math.floor(Math.random() * 100) + 1,
-  //   };
-  // }).filter((entry, index, self) => {
-  //   // Randomly filter out some entries to have varying number of entries per day
-  //   const dayEntries = self.filter((e) => e.date === entry.date);
-  //   return dayEntries.length <= Math.floor(Math.random() * 4) + 1;
-  // });
 
   const reversedEntries = [...entries].reverse();
 

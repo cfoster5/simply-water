@@ -16,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
 import { ThemedView } from "@/components/ThemedView";
+// import { dummyEntries as entries } from "@/constants/dummyEntries";
 import { useAppConfigStore } from "@/stores/appConfig";
 import { useIntakeStore } from "@/stores/store";
 
