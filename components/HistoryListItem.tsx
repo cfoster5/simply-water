@@ -2,11 +2,30 @@ import { useLocales } from "expo-localization";
 import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
-export const HistoryListItem = ({ item, isFirstItem, isLastItem }) => {
+import { RadioButton } from "./RadioButton";
+
+interface HistoryListItemProps {
+  item: { date: string; time: string; amount: number };
+  isFirstItem: boolean;
+  isLastItem: boolean;
+  showSelection?: boolean;
+  isSelected?: boolean;
+  onSelect?: () => void;
+}
+
+export const HistoryListItem = ({
+  item,
+  isFirstItem,
+  isLastItem,
+  showSelection = false,
+  isSelected = false,
+  onSelect,
+}: HistoryListItemProps) => {
   const [locale] = useLocales();
   return (
     // Style extracted from Figma
     <Pressable
+      onPress={showSelection ? onSelect : undefined}
       style={{
         flex: 1,
         flexDirection: "row",
@@ -23,12 +42,14 @@ export const HistoryListItem = ({ item, isFirstItem, isLastItem }) => {
         borderBottomRightRadius: isLastItem ? 10 : 0,
       }}
     >
-      <View>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        {showSelection && <RadioButton isSelected={isSelected} />}
         <Text
           style={[
             iOSUIKit.body,
             {
               color: PlatformColor("label"),
+              paddingLeft: showSelection ? 8 : 0,
             },
           ]}
         >
@@ -37,12 +58,7 @@ export const HistoryListItem = ({ item, isFirstItem, isLastItem }) => {
       </View>
       <View style={{ alignItems: "center" }}>
         <Text
-          style={[
-            iOSUIKit.body,
-            {
-              color: PlatformColor("secondaryLabel"),
-            },
-          ]}
+          style={[iOSUIKit.body, { color: PlatformColor("secondaryLabel") }]}
         >
           {item.amount} {locale.measurementSystem === "metric" ? "ml" : "oz"}
         </Text>

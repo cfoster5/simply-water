@@ -8,7 +8,7 @@ export const dummyEntries = Array.from({ length: 10 }, () => {
   const hours = faker.number.int({ min: 7, max: 22 }); // Random hour between 7 AM and 10 PM
   const minutes = faker.number.int({ min: 0, max: 59 }); // Random minute
   const time = new Date(
-    fullDate.setHours(hours, minutes, 0)
+    fullDate.setHours(hours, minutes, 0),
   ).toLocaleTimeString();
   return {
     fullDate, // Keep the full Date object for sorting

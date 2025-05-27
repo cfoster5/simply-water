@@ -50,7 +50,7 @@ const Button = ({ handlePress, symbolName }: CircleButtonProps) => {
   );
 };
 
-export default function NotFoundScreen() {
+export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const [locale] = useLocales();
   const { addEntry, entries, resetDailyEntries } = useIntakeStore();
@@ -166,7 +166,7 @@ export default function NotFoundScreen() {
                     text: "OK",
                     onPress: resetDailyEntries,
                   },
-                ]
+                ],
               );
             }}
             symbolName="arrow.clockwise"
@@ -193,7 +193,7 @@ export default function NotFoundScreen() {
                 ],
                 "plain-text",
                 "",
-                "numeric"
+                "numeric",
               );
             }}
             symbolName="plus"

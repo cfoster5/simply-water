@@ -1,5 +1,4 @@
 import { version } from "./package.json";
-import { Colors } from "./constants/Colors.ts";
 
 export default {
   expo: {
@@ -40,10 +39,10 @@ export default {
           image: "./assets/images/splash-icon.png",
           imageWidth: 200,
           resizeMode: "contain",
-          backgroundColor: Colors.light.background,
+          backgroundColor: "#fff",
           dark: {
             image: "./assets/images/splash-icon.png",
-            backgroundColor: Colors.dark.background,
+            backgroundColor: "#151718",
           },
         },
       ],

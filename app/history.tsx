@@ -1,14 +1,24 @@
-import { PlatformColor, SectionList, Text, View } from "react-native";
+import { useNavigation } from "expo-router";
+import { useLayoutEffect, useState } from "react";
+import {
+  PlatformColor,
+  Pressable,
+  SectionList,
+  Text,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { HistoryListItem } from "@/components/HistoryListItem";
-// import { dummyEntries as entries } from "@/constants/dummyEntries";
 import { useIntakeStore } from "@/stores/store";
 
-export default function NotFoundScreen() {
-  const { entries } = useIntakeStore();
+export default function HistoryScreen() {
+  const navigation = useNavigation();
+  const { entries, removeEntries } = useIntakeStore();
   const { bottom } = useSafeAreaInsets();
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
   const reversedEntries = [...entries].reverse();
 
@@ -29,6 +39,56 @@ export default function NotFoundScreen() {
     index: index,
   }));
 
+  // Toggle header buttons for editing and deletion
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: !isEditing
+        ? null
+        : () => (
+            <Pressable
+              onPress={() => {
+                removeEntries(selectedKeys);
+                setSelectedKeys([]);
+                setIsEditing(false);
+              }}
+              disabled={selectedKeys.length === 0}
+            >
+              <Text
+                style={[
+                  iOSUIKit.bodyEmphasized,
+                  {
+                    color:
+                      selectedKeys.length === 0
+                        ? PlatformColor("tertiaryLabel")
+                        : PlatformColor("systemRed"),
+                  },
+                ]}
+              >
+                Delete
+              </Text>
+            </Pressable>
+          ),
+      headerRight: () =>
+        entries.length > 0 && (
+          <Pressable
+            onPress={() => {
+              setSelectedKeys([]);
+              setIsEditing(!isEditing);
+            }}
+          >
+            <Text
+              style={[
+                !isEditing ? iOSUIKit.body : iOSUIKit.bodyEmphasized,
+                { color: PlatformColor("systemBlue") },
+              ]}
+            >
+              {!isEditing ? "Edit" : "Done"}
+            </Text>
+          </Pressable>
+        ),
+    });
+  }, [isEditing, navigation, selectedKeys, removeEntries, entries.length]);
+
   return (
     // Styles extracted from Figma
     <SectionList
@@ -38,11 +98,21 @@ export default function NotFoundScreen() {
       renderItem={({ item, index, section }) => {
         const isFirstItem = index === 0;
         const isLastItem = index === section.data.length - 1;
+        const key = `${item.date}-${item.time}`;
         return (
           <HistoryListItem
             item={item}
             isFirstItem={isFirstItem}
             isLastItem={isLastItem}
+            showSelection={isEditing}
+            isSelected={selectedKeys.includes(key)}
+            onSelect={() =>
+              setSelectedKeys((prev) =>
+                prev.includes(key)
+                  ? prev.filter((k) => k !== key)
+                  : [...prev, key],
+              )
+            }
           />
         );
       }}

@@ -1,6 +1,6 @@
-import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
 import { MMKV } from "react-native-mmkv";
 import { create } from "zustand";
+import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
 
 const storage = new MMKV();
 
@@ -20,6 +20,7 @@ type IntakeState = {
   entries: Entry[];
   resetDailyEntries: () => void;
   addEntry: (entry: Entry) => void;
+  removeEntries: (keys: string[]) => void;
 };
 
 export const useIntakeStore = create<IntakeState>()(
@@ -37,10 +38,17 @@ export const useIntakeStore = create<IntakeState>()(
           entries: [...state.entries, entry],
         }));
       },
+      removeEntries: (keys) => {
+        set((state) => ({
+          entries: state.entries.filter(
+            (e) => !keys.includes(`${e.date}-${e.time}`),
+          ),
+        }));
+      },
     }),
     {
       name: "com.cfoster.water",
       storage: createJSONStorage(() => zustandStorage),
-    }
-  )
+    },
+  ),
 );
