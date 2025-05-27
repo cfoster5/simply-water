@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/cfoster5/simply-water/compare/v1.5.0...v1.6.0) (2025-05-27)
+
+
+### Features
+
+* add history removal ([3959470](https://github.com/cfoster5/simply-water/commit/395947070c8a69de62da9a3320f934e6f8f5846b))
+
 ## [1.5.0](https://github.com/cfoster5/simply-water/compare/v1.4.0...v1.5.0) (2025-03-24)
 
 
