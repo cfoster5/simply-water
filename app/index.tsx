@@ -1,3 +1,4 @@
+import { getAnalytics } from "@react-native-firebase/analytics";
 import { useLocales } from "expo-localization";
 import { Link } from "expo-router";
 import * as StoreReview from "expo-store-review";
@@ -85,9 +86,16 @@ export default function HomeScreen() {
 
   async function shareAppLink() {
     try {
-      await Share.share({
+      const shareAction = await Share.share({
         message: "https://apps.apple.com/us/app/simply-water/id6742065968",
       });
+      if (shareAction.action === Share.sharedAction) {
+        await getAnalytics().logShare({
+          content_type: "url",
+          item_id: "https://apps.apple.com/us/app/simply-water/id6742065968",
+          method: "home-screen-button",
+        });
+      }
     } catch (error) {
       console.error("Error sharing:", error);
     }
