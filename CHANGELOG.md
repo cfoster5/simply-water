@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/cfoster5/simply-water/compare/v1.6.0...v1.7.0) (2025-06-01)
+
+
+### Features
+
+* add share functionality to HomeScreen ([ae4de85](https://github.com/cfoster5/simply-water/commit/ae4de85c9c8e2da430eceb54f0dccecd2b10a347))
+
 ## [1.6.0](https://github.com/cfoster5/simply-water/compare/v1.5.0...v1.6.0) (2025-05-27)
 
 
