@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/cfoster5/simply-water/compare/v1.7.0...v1.8.0) (2025-06-01)
+
+
+### Features
+
+* add analytics logging for app link sharing ([30f0fb2](https://github.com/cfoster5/simply-water/commit/30f0fb2e5e816ce3b837891cda685110650a2672))
+
 ## [1.7.0](https://github.com/cfoster5/simply-water/compare/v1.6.0...v1.7.0) (2025-06-01)
 
 
