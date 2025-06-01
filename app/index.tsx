@@ -7,6 +7,7 @@ import {
   Alert,
   PlatformColor,
   Pressable,
+  Share,
   StyleSheet,
   Text,
   useWindowDimensions,
@@ -82,15 +83,51 @@ export default function HomeScreen() {
       .filter((entry) => entry.date === currentDate)
       .reduce((total, entry) => total + entry.amount, 0) || 0;
 
+  async function shareAppLink() {
+    try {
+      await Share.share({
+        message: "https://apps.apple.com/us/app/simply-water/id6742065968",
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  }
+
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView
         style={{
           flexDirection: "row",
-          justifyContent: "flex-end",
-          paddingRight: 24,
+          justifyContent: "space-between",
+          paddingHorizontal: 24,
         }}
       >
+        <Pressable
+          onPress={shareAppLink}
+          // Style extracted from Figma
+          style={{
+            flexDirection: "row",
+            // Use tertiarySystemBackground if a grey background is wanted
+            // Because background is already grey, don't use secondarySystemBackground
+            // backgroundColor: PlatformColor("tertiarySystemBackground"),
+            backgroundColor: PlatformColor("systemBlue"),
+            minWidth: 44,
+            minHeight: 44,
+            borderRadius: 40,
+            paddingHorizontal: 14,
+            paddingVertical: 7,
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 4,
+          }}
+        >
+          <SymbolView
+            name="square.and.arrow.up"
+            size={iOSUIKit.bodyObject.lineHeight}
+            tintColor={iOSColors.white}
+          />
+          <Text style={[iOSUIKit.body, { color: iOSColors.white }]}>Share</Text>
+        </Pressable>
         <Link href="/history" asChild>
           <Pressable
             // Style extracted from Figma
