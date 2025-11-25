@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/cfoster5/simply-water/compare/v1.8.0...v1.8.1) (2025-11-25)
+
+
+### Bug Fixes
+
+* bump with expo doctor ([334eb2c](https://github.com/cfoster5/simply-water/commit/334eb2cc84835a543f1cbb5012eff06e71753edb))
+
 ## [1.8.0](https://github.com/cfoster5/simply-water/compare/v1.7.0...v1.8.0) (2025-06-01)
 
 
