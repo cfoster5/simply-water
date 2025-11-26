@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.9.0](https://github.com/cfoster5/simply-water/compare/v1.8.1...v1.9.0) (2025-11-26)
+
+
+### Features
+
+* enhance iOS navigation with liquid glass effect and update analytics logging ([502609d](https://github.com/cfoster5/simply-water/commit/502609d13b065bb73997ef2a01fe64bf43c0d02e))
+
+
+### Bug Fixes
+
+* add forceStaticLinking for RNFBApp in iOS build properties for Firebase ([5adf828](https://github.com/cfoster5/simply-water/commit/5adf8281529a167c1644fbc71f8780487e60a2f5))
+
 ## [1.8.1](https://github.com/cfoster5/simply-water/compare/v1.8.0...v1.8.1) (2025-11-25)
 
 
