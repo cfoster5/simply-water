@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/cfoster5/simply-water/compare/v1.9.0...v1.10.0) (2026-02-14)
+
+
+### Features
+
+* update HomeScreen layout with Stack components and replace SymbolView with Image ([2dac272](https://github.com/cfoster5/simply-water/commit/2dac2729ed6f54242419397d0d9e21b9a23d9793))
+
 ## [1.9.0](https://github.com/cfoster5/simply-water/compare/v1.8.1...v1.9.0) (2025-11-26)
 
 
