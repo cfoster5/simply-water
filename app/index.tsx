@@ -1,12 +1,12 @@
 import { getAnalytics } from "@react-native-firebase/analytics";
+import { Image } from "expo-image";
 import { useLocales } from "expo-localization";
-import { Link } from "expo-router";
+import { router, Stack } from "expo-router";
 import * as StoreReview from "expo-store-review";
-import { SFSymbol, SymbolView } from "expo-symbols";
+import { SFSymbol } from "expo-symbols";
 import { useEffect } from "react";
 import {
   Alert,
-  PlatformColor,
   Pressable,
   Share,
   StyleSheet,
@@ -43,10 +43,15 @@ const Button = ({ handlePress, symbolName }: CircleButtonProps) => {
         },
       ]}
     >
-      <SymbolView
+      {/* <SymbolView
         name={symbolName}
         size={width / 6 / 2.5}
         tintColor={iOSColors.white}
+      /> */}
+      <Image
+        source={symbolName}
+        style={{ height: width / 6 / 2.5, width: width / 6 / 2.5 }}
+        tintColor="white"
       />
     </Pressable>
   );
@@ -103,69 +108,25 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <SafeAreaView
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          paddingHorizontal: 24,
-        }}
-      >
-        <Pressable
-          onPress={shareAppLink}
-          // Style extracted from Figma
-          style={{
-            flexDirection: "row",
-            // Use tertiarySystemBackground if a grey background is wanted
-            // Because background is already grey, don't use secondarySystemBackground
-            // backgroundColor: PlatformColor("tertiarySystemBackground"),
-            backgroundColor: PlatformColor("systemBlue"),
-            minWidth: 44,
-            minHeight: 44,
-            borderRadius: 40,
-            paddingHorizontal: 14,
-            paddingVertical: 7,
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 4,
-          }}
+      <Stack.Toolbar placement="left">
+        <Stack.Toolbar.Button onPress={shareAppLink}>
+          <Stack.Toolbar.Icon sf="square.and.arrow.up" />
+          <Stack.Toolbar.Label>Share</Stack.Toolbar.Label>
+        </Stack.Toolbar.Button>
+      </Stack.Toolbar>
+      <Stack.Screen.Title style={{ color: "transparent" }}>
+        Home
+      </Stack.Screen.Title>
+      <Stack.Toolbar placement="right">
+        <Stack.Toolbar.Button
+          variant="prominent"
+          onPress={() => router.push("/history")}
         >
-          <SymbolView
-            name="square.and.arrow.up"
-            size={iOSUIKit.bodyObject.lineHeight}
-            tintColor={iOSColors.white}
-          />
-          <Text style={[iOSUIKit.body, { color: iOSColors.white }]}>Share</Text>
-        </Pressable>
-        <Link href="/history" asChild>
-          <Pressable
-            // Style extracted from Figma
-            style={{
-              flexDirection: "row",
-              // Use tertiarySystemBackground if a grey background is wanted
-              // Because background is already grey, don't use secondarySystemBackground
-              // backgroundColor: PlatformColor("tertiarySystemBackground"),
-              backgroundColor: PlatformColor("systemBlue"),
-              minWidth: 44,
-              minHeight: 44,
-              borderRadius: 40,
-              paddingHorizontal: 14,
-              paddingVertical: 7,
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 4,
-            }}
-          >
-            <SymbolView
-              name="list.bullet"
-              size={iOSUIKit.bodyObject.lineHeight}
-              tintColor={iOSColors.white}
-            />
-            <Text style={[iOSUIKit.body, { color: iOSColors.white }]}>
-              History
-            </Text>
-          </Pressable>
-        </Link>
-      </SafeAreaView>
+          <Stack.Toolbar.Icon sf="list.bullet" />
+          <Stack.Toolbar.Label>History</Stack.Toolbar.Label>
+        </Stack.Toolbar.Button>
+      </Stack.Toolbar>
+
       <View
         style={{
           flex: 1,
@@ -214,7 +175,7 @@ export default function HomeScreen() {
                 ],
               );
             }}
-            symbolName="arrow.clockwise"
+            symbolName="sf:arrow.counterclockwise"
           />
           <Button
             handlePress={() => {
@@ -241,7 +202,7 @@ export default function HomeScreen() {
                 "numeric",
               );
             }}
-            symbolName="plus"
+            symbolName="sf:plus"
           />
         </SafeAreaView>
       </View>
