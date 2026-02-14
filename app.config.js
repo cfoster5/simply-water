@@ -35,6 +35,7 @@ export default {
       "expo-router",
       "expo-web-browser",
       "expo-font",
+      "expo-image",
       [
         "expo-splash-screen",
         {
