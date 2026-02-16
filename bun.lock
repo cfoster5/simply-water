@@ -18,7 +18,7 @@
         "expo-constants": "~55.0.4",
         "expo-dev-client": "~55.0.5",
         "expo-font": "~55.0.3",
-        "expo-glass-effect": "~55.0.5",
+        "expo-glass-effect": "~55.0.6",
         "expo-haptics": "~55.0.5",
         "expo-image": "~55.0.3",
         "expo-linking": "~55.0.4",
@@ -1135,7 +1135,7 @@
 
     "expo-font": ["expo-font@55.0.3", "", { "dependencies": { "fontfaceobserver": "^2.1.0" }, "peerDependencies": { "expo": "*", "react": "*", "react-native": "*" } }, "sha512-DSyh0gzbVii5+Nb/0pAP3bL+CrB9u1N3YeKTx4wXQT8KUnuOlI4A0sEHIO25MfFpjjtovDn0WGzAtimbPkvJmg=="],
 
-    "expo-glass-effect": ["expo-glass-effect@55.0.5", "", { "peerDependencies": { "expo": "*", "react": "*", "react-native": "*" } }, "sha512-ui3yOuntcqLukx32mPLcnYucRGN0zWk67euC45t6WlM6IPjXsRo6Z830drjKE7LPWbpWlRbOkdM6BpoAj+yDCQ=="],
+    "expo-glass-effect": ["expo-glass-effect@55.0.6", "", { "peerDependencies": { "expo": "*", "react": "*", "react-native": "*" } }, "sha512-1WL6SWe+9p4nFnysCiGXvVwuOXx75pp8i0BfoJlg1PZ+b188+lomzlzGYvsQ64cvgZE8c+nimKNHDTTCK0GE0w=="],
 
     "expo-haptics": ["expo-haptics@55.0.5", "", { "peerDependencies": { "expo": "*" } }, "sha512-8bUIjxLtET5290p0WKyMQ8S3lvxMFEOdbA3GHt07QhgPf0eqeCtsH8/+g+ojtVT9RieZM9dZBHiqofdKpwCQfg=="],
 
@@ -2308,6 +2308,8 @@
     "expo-build-properties/semver": ["semver@7.7.2", "", { "bin": { "semver": "bin/semver.js" } }, "sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA=="],
 
     "expo-modules-autolinking/commander": ["commander@7.2.0", "", {}, "sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw=="],
+
+    "expo-router/expo-glass-effect": ["expo-glass-effect@55.0.5", "", { "peerDependencies": { "expo": "*", "react": "*", "react-native": "*" } }, "sha512-ui3yOuntcqLukx32mPLcnYucRGN0zWk67euC45t6WlM6IPjXsRo6Z830drjKE7LPWbpWlRbOkdM6BpoAj+yDCQ=="],
 
     "expo-router/semver": ["semver@7.6.3", "", { "bin": { "semver": "bin/semver.js" } }, "sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A=="],
 
