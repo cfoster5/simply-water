@@ -1,3 +1,4 @@
+import * as Haptics from "expo-haptics";
 import { Alert } from "react-native";
 import { MMKV } from "react-native-mmkv";
 import { create } from "zustand";
@@ -24,9 +25,7 @@ type IntakeState = {
   removeEntries: (keys: string[]) => void;
 };
 
-export function promptAddEntry(
-  addEntry: (entry: Entry) => void,
-) {
+export function promptAddEntry(addEntry: (entry: Entry) => void) {
   Alert.prompt(
     "Enter Amount",
     undefined,
@@ -64,6 +63,7 @@ export const useIntakeStore = create<IntakeState>()(
         set((state) => ({
           entries: [...state.entries, entry],
         }));
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       },
       removeEntries: (keys) => {
         set((state) => ({
