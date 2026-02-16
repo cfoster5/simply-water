@@ -1,4 +1,3 @@
-import * as AC from "@bacons/apple-colors";
 import { useMMKVDevTools } from "@dev-plugins/react-native-mmkv";
 import { getAnalytics } from "@react-native-firebase/analytics";
 import {
@@ -6,8 +5,6 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
-import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
-import { isLiquidGlassAvailable } from "expo-glass-effect";
 import { Stack, useGlobalSearchParams, usePathname } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -18,37 +15,6 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-
-const AppleStackPreset: NativeStackNavigationOptions =
-  process.env.EXPO_OS !== "ios"
-    ? {}
-    : isLiquidGlassAvailable()
-      ? {
-          // iOS 26 + liquid glass
-          headerTransparent: true,
-          headerShadowVisible: false,
-          headerLargeTitleShadowVisible: false,
-          headerLargeStyle: {
-            backgroundColor: "transparent",
-          },
-          headerTitleStyle: {
-            color: AC.label as any,
-          },
-          headerLargeTitle: false,
-          headerBlurEffect: "none",
-          headerBackButtonDisplayMode: "minimal",
-        }
-      : {
-          headerTransparent: true,
-          headerShadowVisible: true,
-          headerLargeTitleShadowVisible: false,
-          headerLargeStyle: {
-            backgroundColor: "transparent",
-          },
-          headerLargeTitle: true,
-          headerBlurEffect: "systemChromeMaterial",
-          headerBackButtonDisplayMode: "default",
-        };
 
 export default function RootLayout() {
   useMMKVDevTools();
