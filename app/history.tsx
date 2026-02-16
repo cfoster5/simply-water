@@ -1,21 +1,15 @@
-import { useNavigation } from "expo-router";
-import { useLayoutEffect, useState } from "react";
-import {
-  PlatformColor,
-  Pressable,
-  SectionList,
-  Text,
-  View,
-} from "react-native";
+import { Stack } from "expo-router";
+import { useState } from "react";
+import { PlatformColor, SectionList, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { HistoryListItem } from "@/components/HistoryListItem";
-import { useIntakeStore } from "@/stores/store";
+import { dummyEntries } from "@/constants/dummyEntries";
+import { promptAddEntry, useIntakeStore } from "@/stores/store";
 
 export default function HistoryScreen() {
-  const navigation = useNavigation();
-  const { entries, removeEntries } = useIntakeStore();
+  const { entries, removeEntries, addEntry } = useIntakeStore();
   const { bottom } = useSafeAreaInsets();
   const [isEditing, setIsEditing] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
@@ -39,131 +33,138 @@ export default function HistoryScreen() {
     index: index,
   }));
 
-  // Toggle header buttons for editing and deletion
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft: !isEditing
-        ? null
-        : () => (
-            <Pressable
-              onPress={() => {
-                removeEntries(selectedKeys);
-                setSelectedKeys([]);
-                setIsEditing(false);
-              }}
-              disabled={selectedKeys.length === 0}
+  return (
+    <>
+      {/* Styles extracted from Figma */}
+      <SectionList
+        style={{ backgroundColor: PlatformColor("systemGroupedBackground") }}
+        sections={sections}
+        keyExtractor={(item, index) => item.time + index}
+        renderItem={({ item, index, section }) => {
+          const isFirstItem = index === 0;
+          const isLastItem = index === section.data.length - 1;
+          const key = `${item.date}-${item.time}`;
+          return (
+            <HistoryListItem
+              item={item}
+              isFirstItem={isFirstItem}
+              isLastItem={isLastItem}
+              showSelection={isEditing}
+              isSelected={selectedKeys.includes(key)}
+              onSelect={() =>
+                setSelectedKeys((prev) =>
+                  prev.includes(key)
+                    ? prev.filter((k) => k !== key)
+                    : [...prev, key],
+                )
+              }
+            />
+          );
+        }}
+        renderSectionHeader={({ section: { title, totalAmount, index } }) => (
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingHorizontal: 16,
+              paddingTop: index === 0 ? 16 : 32,
+              paddingBottom: 7,
+            }}
+          >
+            <Text
+              style={[
+                iOSUIKit.title3Emphasized,
+                { color: PlatformColor("label") },
+              ]}
             >
-              <Text
-                style={[
-                  iOSUIKit.bodyEmphasized,
-                  {
-                    color:
-                      selectedKeys.length === 0
-                        ? PlatformColor("tertiaryLabel")
-                        : PlatformColor("systemRed"),
-                  },
-                ]}
-              >
-                Delete
-              </Text>
-            </Pressable>
-          ),
-      headerRight: () =>
-        entries.length > 0 && (
-          <Pressable
+              {title}
+            </Text>
+            <Text
+              style={[
+                iOSUIKit.title3Emphasized,
+                { color: PlatformColor("systemBlue") },
+              ]}
+            >
+              {totalAmount} oz
+            </Text>
+          </View>
+        )}
+        stickySectionHeadersEnabled={false}
+        {...(sections.length > 0 && {
+          automaticallyAdjustsScrollIndicatorInsets: true,
+          contentInsetAdjustmentBehavior: "automatic" as const,
+          contentInset: { bottom },
+        })}
+        scrollIndicatorInsets={{ bottom }}
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          // If there are no sections, we want the content to take up the full height so that the empty state is centered
+          ...(sections.length === 0 && { flexGrow: 1 }),
+        }}
+        ListEmptyComponent={() => (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={[
+                iOSUIKit.body,
+                {
+                  color: PlatformColor("label"),
+                  textAlign: "center",
+                },
+              ]}
+            >
+              Press the + button below to add entries!
+            </Text>
+          </View>
+        )}
+      />
+      {entries.length > 0 && (
+        <Stack.Toolbar placement="right">
+          <Stack.Toolbar.Button
             onPress={() => {
               setSelectedKeys([]);
               setIsEditing(!isEditing);
             }}
           >
-            <Text
-              style={[
-                !isEditing ? iOSUIKit.body : iOSUIKit.bodyEmphasized,
-                { color: PlatformColor("systemBlue") },
-              ]}
-            >
-              {!isEditing ? "Edit" : "Done"}
-            </Text>
-          </Pressable>
-        ),
-    });
-  }, [isEditing, navigation, selectedKeys, removeEntries, entries.length]);
-
-  return (
-    // Styles extracted from Figma
-    <SectionList
-      style={{ backgroundColor: PlatformColor("systemGroupedBackground") }}
-      sections={sections}
-      keyExtractor={(item, index) => item.time + index}
-      renderItem={({ item, index, section }) => {
-        const isFirstItem = index === 0;
-        const isLastItem = index === section.data.length - 1;
-        const key = `${item.date}-${item.time}`;
-        return (
-          <HistoryListItem
-            item={item}
-            isFirstItem={isFirstItem}
-            isLastItem={isLastItem}
-            showSelection={isEditing}
-            isSelected={selectedKeys.includes(key)}
-            onSelect={() =>
-              setSelectedKeys((prev) =>
-                prev.includes(key)
-                  ? prev.filter((k) => k !== key)
-                  : [...prev, key],
-              )
-            }
-          />
-        );
-      }}
-      renderSectionHeader={({ section: { title, totalAmount, index } }) => (
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            paddingHorizontal: 16,
-            paddingTop: index === 0 ? 16 : 32,
-            paddingBottom: 7,
-          }}
-        >
-          <Text
-            style={[
-              iOSUIKit.title3Emphasized,
-              { color: PlatformColor("label") },
-            ]}
-          >
-            {title}
-          </Text>
-          <Text
-            style={[
-              iOSUIKit.title3Emphasized,
-              { color: PlatformColor("systemBlue") },
-            ]}
-          >
-            {totalAmount} oz
-          </Text>
-        </View>
+            <Stack.Toolbar.Label>
+              {isEditing ? "Done" : "Select"}
+            </Stack.Toolbar.Label>
+          </Stack.Toolbar.Button>
+        </Stack.Toolbar>
       )}
-      stickySectionHeadersEnabled={false}
-      automaticallyAdjustsScrollIndicatorInsets
-      contentInsetAdjustmentBehavior="automatic"
-      contentInset={{ bottom: bottom }}
-      scrollIndicatorInsets={{ bottom: bottom }}
-      contentContainerStyle={{ paddingHorizontal: 16 }}
-      ListEmptyComponent={() => (
-        <Text
-          style={[
-            iOSUIKit.body,
-            {
-              color: PlatformColor("label"),
-              textAlign: "center",
-              marginTop: 24,
-            },
-          ]}
-        >
-          Press the + button on the last screen to add entries!
-        </Text>
+      {isEditing ? (
+        <Stack.Toolbar placement="bottom">
+          <Stack.Toolbar.Spacer />
+          <Stack.Toolbar.Button
+            disabled={selectedKeys.length === 0}
+            onPress={() => {
+              removeEntries(selectedKeys);
+              setSelectedKeys([]);
+              setIsEditing(false);
+            }}
+            tintColor={PlatformColor("systemRed")}
+          >
+            <Stack.Toolbar.Icon sf="trash" />
+            <Stack.Toolbar.Label>Delete</Stack.Toolbar.Label>
+          </Stack.Toolbar.Button>
+        </Stack.Toolbar>
+      ) : (
+        <Stack.Toolbar placement="bottom">
+          <Stack.Toolbar.Spacer />
+          <Stack.Toolbar.Button
+            onPress={() => promptAddEntry(addEntry)}
+            variant="prominent"
+          >
+            <Stack.Toolbar.Icon sf="plus" />
+            <Stack.Toolbar.Label>Add</Stack.Toolbar.Label>
+          </Stack.Toolbar.Button>
+        </Stack.Toolbar>
       )}
-    />
+    </>
   );
 }

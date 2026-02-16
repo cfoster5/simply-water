@@ -78,12 +78,23 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={AppleStackPreset}>
+      <Stack>
         <Stack.Screen
           name="index"
-          options={{ title: "Home", headerShown: false }}
+          options={{
+            title: "Home",
+            headerShown: false,
+            headerTransparent: true,
+          }}
         />
-        <Stack.Screen name="history" options={{ title: "History" }} />
+        <Stack.Screen
+          name="history"
+          options={{
+            title: "History",
+            headerBackButtonDisplayMode: "minimal",
+            headerLargeTitleEnabled: true,
+          }}
+        />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

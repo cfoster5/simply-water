@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import { MMKV } from "react-native-mmkv";
 import { create } from "zustand";
 import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
@@ -22,6 +23,32 @@ type IntakeState = {
   addEntry: (entry: Entry) => void;
   removeEntries: (keys: string[]) => void;
 };
+
+export function promptAddEntry(
+  addEntry: (entry: Entry) => void,
+) {
+  Alert.prompt(
+    "Enter Amount",
+    undefined,
+    [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "OK",
+        onPress: (amount: string | undefined) => {
+          const numericAmount = parseInt(amount ?? "", 10);
+          if (!isNaN(numericAmount)) {
+            const currentDate = new Date().toLocaleDateString();
+            const time = new Date().toLocaleTimeString();
+            addEntry({ date: currentDate, time, amount: numericAmount });
+          }
+        },
+      },
+    ],
+    "plain-text",
+    "",
+    "numeric",
+  );
+}
 
 export const useIntakeStore = create<IntakeState>()(
   persist(

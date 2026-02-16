@@ -20,7 +20,7 @@ import { iOSColors, iOSUIKit } from "react-native-typography";
 import { ThemedView } from "@/components/ThemedView";
 // import { dummyEntries as entries } from "@/constants/dummyEntries";
 import { useAppConfigStore } from "@/stores/appConfig";
-import { useIntakeStore } from "@/stores/store";
+import { promptAddEntry, useIntakeStore } from "@/stores/store";
 
 type CircleButtonProps = {
   handlePress: () => void;
@@ -77,12 +77,6 @@ export default function HomeScreen() {
   }, [entries.length, hasRequestedReview, setHasRequestedReview]);
 
   const currentDate = new Date().toLocaleDateString();
-
-  const handleAddEntry = (entryAmount: number) => {
-    const time = new Date().toLocaleTimeString();
-    const entry = { date: currentDate, time, amount: entryAmount };
-    addEntry(entry);
-  };
 
   const totalAmount =
     entries
@@ -178,30 +172,7 @@ export default function HomeScreen() {
             symbolName="sf:arrow.counterclockwise"
           />
           <Button
-            handlePress={() => {
-              Alert.prompt(
-                "Enter Amount",
-                undefined,
-                [
-                  {
-                    text: "Cancel",
-                    style: "cancel",
-                  },
-                  {
-                    text: "OK",
-                    onPress: (amount) => {
-                      const numericAmount = parseInt(amount, 10);
-                      if (!isNaN(numericAmount)) {
-                        handleAddEntry(numericAmount);
-                      }
-                    },
-                  },
-                ],
-                "plain-text",
-                "",
-                "numeric",
-              );
-            }}
+            handlePress={() => promptAddEntry(addEntry)}
             symbolName="sf:plus"
           />
         </SafeAreaView>
