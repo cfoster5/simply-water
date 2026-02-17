@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.12.0](https://github.com/cfoster5/simply-water/compare/v1.11.0...v1.12.0) (2026-02-17)
+
+
+### Features
+
+* refactor purchases configuration and integrate purchase readiness check ([1652148](https://github.com/cfoster5/simply-water/commit/16521489837d381b0e288333f2cb047c76b8e1a6))
+* use plain background color for splash screen ([fad712d](https://github.com/cfoster5/simply-water/commit/fad712d45c15bd10f4cd8d629b0e966e4c07d8b2))
+
 ## [1.11.0](https://github.com/cfoster5/simply-water/compare/v1.10.0...v1.11.0) (2026-02-17)
 
 
