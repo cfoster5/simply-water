@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.11.0](https://github.com/cfoster5/simply-water/compare/v1.10.0...v1.11.0) (2026-02-17)
+
+
+### Features
+
+* add quick amount presets and GlassView for buttons ([145a630](https://github.com/cfoster5/simply-water/commit/145a6307ebbbe5cf8550e1d6536db9be4426fa84))
+* implement onboarding and goal screens, integrate pro status and paywall features ([ccb58be](https://github.com/cfoster5/simply-water/commit/ccb58be3e65d9dc64edd44230aae6f726e52488d))
+* integrate haptic feedback on entry addition ([09b5f6f](https://github.com/cfoster5/simply-water/commit/09b5f6f9a4f650b8fc2416e9e7eec6278cca4d44))
+* update history screen with header and bottom toolbar buttons ([b63ecde](https://github.com/cfoster5/simply-water/commit/b63ecde6957a855613471ca388de9c6c1f7a3f78))
+
 ## [1.10.0](https://github.com/cfoster5/simply-water/compare/v1.9.0...v1.10.0) (2026-02-14)
 
 
