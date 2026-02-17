@@ -1,3 +1,4 @@
+import { getLocales } from "expo-localization";
 import { MMKV } from "react-native-mmkv";
 import { create } from "zustand";
 import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
@@ -10,13 +11,21 @@ const zustandStorage: StateStorage = {
   removeItem: (name) => storage.delete(name),
 };
 
+type Unit = "oz" | "ml";
+
 type AppConfigState = {
   hasRequestedReview: boolean;
   lastRequestedReviewTimestamp: number;
+  hasOnboarded: boolean;
+  dailyGoal: number;
+  unit: Unit;
 };
 
 type AppConfigActions = {
   setHasRequestedReview: () => void;
+  completeOnboarding: () => void;
+  setDailyGoal: (goal: number) => void;
+  setUnit: (unit: Unit) => void;
 };
 
 export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
@@ -24,12 +33,17 @@ export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
     (set) => ({
       hasRequestedReview: false,
       lastRequestedReviewTimestamp: 0,
-      hasSeenOnboardingModal: false,
+      hasOnboarded: false,
+      dailyGoal: getLocales()[0]?.measurementSystem === "metric" ? 2000 : 64,
+      unit: (getLocales()[0]?.measurementSystem === "metric" ? "ml" : "oz") as Unit,
       setHasRequestedReview: () =>
         set(() => ({
           hasRequestedReview: true,
           lastRequestedReviewTimestamp: new Date().getTime(),
         })),
+      completeOnboarding: () => set(() => ({ hasOnboarded: true })),
+      setDailyGoal: (goal) => set(() => ({ dailyGoal: goal })),
+      setUnit: (unit) => set(() => ({ unit })),
     }),
     {
       name: "app.config",

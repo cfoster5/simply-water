@@ -1,6 +1,7 @@
-import { useLocales } from "expo-localization";
 import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+
+import { useAppConfigStore } from "@/stores/appConfig";
 
 import { RadioButton } from "./RadioButton";
 
@@ -21,7 +22,7 @@ export const HistoryListItem = ({
   isSelected = false,
   onSelect,
 }: HistoryListItemProps) => {
-  const [locale] = useLocales();
+  const unit = useAppConfigStore((s) => s.unit);
   return (
     // Style extracted from Figma
     <Pressable
@@ -60,7 +61,7 @@ export const HistoryListItem = ({
         <Text
           style={[iOSUIKit.body, { color: PlatformColor("secondaryLabel") }]}
         >
-          {item.amount} {locale.measurementSystem === "metric" ? "ml" : "oz"}
+          {item.amount} {unit}
         </Text>
       </View>
     </Pressable>

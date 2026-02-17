@@ -1,7 +1,6 @@
 import { getAnalytics } from "@react-native-firebase/analytics";
 import { GlassView, isLiquidGlassAvailable } from "expo-glass-effect";
 import { Image } from "expo-image";
-import { useLocales } from "expo-localization";
 import { router, Stack } from "expo-router";
 import * as StoreReview from "expo-store-review";
 import { SFSymbol } from "expo-symbols";
@@ -83,9 +82,9 @@ const Button = ({ handlePress, symbolName, label }: CircleButtonProps) => {
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
-  const [locale] = useLocales();
   const { addEntry, entries, resetDailyEntries } = useIntakeStore();
-  const { hasRequestedReview, setHasRequestedReview } = useAppConfigStore();
+  const { hasRequestedReview, setHasRequestedReview, unit } =
+    useAppConfigStore();
 
   useEffect(() => {
     async function requestReview() {
@@ -154,10 +153,27 @@ export default function HomeScreen() {
   return (
     <ThemedView style={styles.container}>
       <Stack.Toolbar placement="left">
-        <Stack.Toolbar.Button onPress={shareAppLink}>
-          <Stack.Toolbar.Icon sf="square.and.arrow.up" />
-          <Stack.Toolbar.Label>Share</Stack.Toolbar.Label>
-        </Stack.Toolbar.Button>
+        <Stack.Toolbar.Menu icon="ellipsis">
+          <Stack.Toolbar.MenuAction
+            icon="waterbottle"
+            onPress={() => router.push("/goal")}
+          >
+            Change Goal
+          </Stack.Toolbar.MenuAction>
+          <Stack.Toolbar.MenuAction
+            icon="square.and.arrow.up"
+            onPress={shareAppLink}
+          >
+            Share App
+          </Stack.Toolbar.MenuAction>
+
+          <Stack.Toolbar.MenuAction
+            icon="restart"
+            onPress={() => router.replace("/onboarding")}
+          >
+            Restart Onboarding
+          </Stack.Toolbar.MenuAction>
+        </Stack.Toolbar.Menu>
       </Stack.Toolbar>
       <Stack.Screen.Title style={{ color: "transparent" }}>
         Home
@@ -201,7 +217,7 @@ export default function HomeScreen() {
           >
             <Text style={iOSUIKit.largeTitleEmphasizedWhite}>
               {totalAmount}
-              {locale.measurementSystem === "metric" ? "ml" : "oz"}
+              {unit}
             </Text>
             <Text style={iOSUIKit.bodyWhite}>today</Text>
           </Pressable>

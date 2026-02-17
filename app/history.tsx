@@ -1,37 +1,60 @@
-import { Stack } from "expo-router";
+import { BlurView } from "expo-blur";
+import { Color, router, Stack } from "expo-router";
 import { useState } from "react";
-import { PlatformColor, SectionList, Text, View } from "react-native";
+import {
+  PlatformColor,
+  Pressable,
+  SectionList,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { HistoryListItem } from "@/components/HistoryListItem";
-import { dummyEntries } from "@/constants/dummyEntries";
+import { useProStatus } from "@/hooks/useProStatus";
 import { promptAddEntry, useIntakeStore } from "@/stores/store";
+
+const FREE_HISTORY_DAYS = 3;
 
 export default function HistoryScreen() {
   const { entries, removeEntries, addEntry } = useIntakeStore();
   const { bottom } = useSafeAreaInsets();
   const [isEditing, setIsEditing] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const isPro = useProStatus();
 
   const reversedEntries = [...entries].reverse();
 
-  const groupedEntries = reversedEntries.reduce((acc, entry) => {
-    const date = entry.date;
-    if (!acc[date]) {
-      acc[date] = { data: [], totalAmount: 0 };
-    }
-    acc[date].data.push(entry);
-    acc[date].totalAmount += entry.amount;
-    return acc;
-  }, {});
+  const groupedEntries = reversedEntries.reduce(
+    (acc, entry) => {
+      const date = entry.date;
+      if (!acc[date]) {
+        acc[date] = { data: [], totalAmount: 0 };
+      }
+      acc[date].data.push(entry);
+      acc[date].totalAmount += entry.amount;
+      return acc;
+    },
+    {} as Record<string, { data: typeof reversedEntries; totalAmount: number }>,
+  );
 
-  const sections = Object.keys(groupedEntries).map((date, index) => ({
+  const allSections = Object.keys(groupedEntries).map((date, index) => ({
     title: date,
     data: groupedEntries[date].data,
     totalAmount: groupedEntries[date].totalAmount,
     index: index,
   }));
+
+  const sections = isPro
+    ? allSections
+    : allSections.slice(0, FREE_HISTORY_DAYS);
+
+  const lockedSections = isPro ? [] : allSections.slice(FREE_HISTORY_DAYS);
+  const hasLockedHistory = lockedSections.length > 0;
+  const colorScheme = useColorScheme();
 
   return (
     <>
@@ -122,9 +145,105 @@ export default function HistoryScreen() {
             </Text>
           </View>
         )}
+        ListFooterComponent={
+          hasLockedHistory
+            ? () => (
+                <View style={{ overflow: "hidden", borderRadius: 10 }}>
+                  {/* Blurred preview of locked entries */}
+                  <View style={{ pointerEvents: "none" }}>
+                    {lockedSections.slice(0, 2).map((section) => (
+                      <View key={section.title}>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            paddingHorizontal: 16,
+                            paddingTop: 32,
+                            paddingBottom: 7,
+                          }}
+                        >
+                          <Text
+                            style={[
+                              iOSUIKit.title3Emphasized,
+                              { color: PlatformColor("label") },
+                            ]}
+                          >
+                            {section.title}
+                          </Text>
+                          <Text
+                            style={[
+                              iOSUIKit.title3Emphasized,
+                              { color: PlatformColor("systemBlue") },
+                            ]}
+                          >
+                            {section.totalAmount} oz
+                          </Text>
+                        </View>
+                        {section.data.slice(0, 3).map((item, i) => (
+                          <HistoryListItem
+                            key={`${item.date}-${item.time}`}
+                            item={item}
+                            isFirstItem={i === 0}
+                            isLastItem={
+                              i === Math.min(section.data.length, 3) - 1
+                            }
+                          />
+                        ))}
+                      </View>
+                    ))}
+                  </View>
+                  {/* Blur + CTA overlay */}
+                  <Pressable
+                    onPress={() => router.push("/paywall")}
+                    style={StyleSheet.absoluteFill}
+                  >
+                    <BlurView
+                      intensity={40}
+                      tint={colorScheme === "dark" ? "dark" : "light"}
+                      style={[
+                        StyleSheet.absoluteFill,
+                        {
+                          justifyContent: "center",
+                          alignItems: "center",
+                          gap: 4,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          iOSUIKit.bodyEmphasized,
+                          { color: Color.ios.label },
+                        ]}
+                      >
+                        Unlock Full History
+                      </Text>
+                      <Text
+                        style={[
+                          iOSUIKit.body,
+                          {
+                            color: Color.ios.secondaryLabel,
+                            textAlign: "center",
+                          },
+                        ]}
+                      >
+                        Upgrade to Pro to see all your history
+                      </Text>
+                    </BlurView>
+                  </Pressable>
+                </View>
+              )
+            : undefined
+        }
       />
       {entries.length > 0 && (
         <Stack.Toolbar placement="right">
+          {!isPro && (
+            <Stack.Toolbar.Button
+              onPress={() => router.push("/paywall")}
+            >
+              <Stack.Toolbar.Label>Pro</Stack.Toolbar.Label>
+            </Stack.Toolbar.Button>
+          )}
           <Stack.Toolbar.Button
             onPress={() => {
               setSelectedKeys([]);

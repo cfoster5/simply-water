@@ -5,13 +5,16 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
-import { Stack, useGlobalSearchParams, usePathname } from "expo-router";
+import { router, Stack, useGlobalSearchParams, usePathname } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Platform } from "react-native";
+import Purchases, { LOG_LEVEL } from "react-native-purchases";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useAppConfigStore } from "@/stores/appConfig";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -22,11 +25,46 @@ export default function RootLayout() {
   const pathname = usePathname();
   const params = useGlobalSearchParams();
   const colorScheme = useColorScheme();
+  const hasOnboarded = useAppConfigStore((s) => s.hasOnboarded);
+  const [hasHydratedAppConfig, setHasHydratedAppConfig] = useState(() =>
+    useAppConfigStore.persist.hasHydrated(),
+  );
 
   useEffect(() => {
-    // Assuming there are no other assets to load, hide the splash screen immediately
+    Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
+
+    // Platform-specific API keys
+    const iosApiKey = "test_ZrOYeUYbXnwNLjPdTgpqswiaRNQ";
+    const androidApiKey = "test_ZrOYeUYbXnwNLjPdTgpqswiaRNQ";
+
+    if (Platform.OS === "ios") {
+      Purchases.configure({ apiKey: iosApiKey });
+    } else if (Platform.OS === "android") {
+      Purchases.configure({ apiKey: androidApiKey });
+    }
     SplashScreen.hideAsync();
   }, []);
+
+  useEffect(() => {
+    const unsubscribeHydration = useAppConfigStore.persist.onFinishHydration(
+      () => {
+        setHasHydratedAppConfig(true);
+      },
+    );
+
+    if (useAppConfigStore.persist.hasHydrated()) {
+      setHasHydratedAppConfig(true);
+    }
+
+    return unsubscribeHydration;
+  }, []);
+
+  useEffect(() => {
+    if (!hasHydratedAppConfig) return;
+    if (!hasOnboarded && pathname !== "/onboarding") {
+      router.replace("/onboarding");
+    }
+  }, [hasHydratedAppConfig, hasOnboarded, pathname]);
 
   useEffect(() => {
     const logScreenView = async () => {
@@ -46,6 +84,23 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen
+          name="onboarding"
+          options={{
+            title: "Onboarding",
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="goal"
+          options={{
+            title: "Intake Goal",
+            presentation: "formSheet",
+            sheetAllowedDetents: [0.5],
+            headerShown: false,
+            sheetGrabberVisible: true,
+          }}
+        />
+        <Stack.Screen
           name="index"
           options={{
             title: "Home",
@@ -59,6 +114,16 @@ export default function RootLayout() {
             title: "History",
             headerBackButtonDisplayMode: "minimal",
             headerLargeTitleEnabled: true,
+          }}
+        />
+        <Stack.Screen
+          name="paywall"
+          options={{
+            title: "Pro",
+            presentation: "formSheet",
+            sheetAllowedDetents: [0.5],
+            headerShown: false,
+            sheetGrabberVisible: true,
           }}
         />
       </Stack>
