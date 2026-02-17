@@ -2,11 +2,12 @@ import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import { useAppConfigStore } from "@/stores/appConfig";
+import { type Entry } from "@/stores/store";
 
 import { RadioButton } from "./RadioButton";
 
 interface HistoryListItemProps {
-  item: { date: string; time: string; amount: number };
+  item: Entry;
   isFirstItem: boolean;
   isLastItem: boolean;
   showSelection?: boolean;

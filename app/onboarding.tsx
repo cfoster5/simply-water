@@ -19,6 +19,8 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { useAppConfigStore } from "@/stores/appConfig";
 
 const HOLD_DURATION = 1500;
+const NAVIGATION_DELAY_MS = 1000;
+const GOAL_SCREEN_DELAY_MS = 500;
 
 const commitments = [
   "Stay hydrated throughout the day",
@@ -112,8 +114,8 @@ export default function OnboardingScreen() {
         router.replace("/");
         setTimeout(() => {
           router.push("/goal");
-        }, 500);
-      }, 1000);
+        }, GOAL_SCREEN_DELAY_MS);
+      }, NAVIGATION_DELAY_MS);
     }, HOLD_DURATION);
   }, [committed, router, startPulse, stopPulse, completeOnboarding]);
 
@@ -182,7 +184,6 @@ export default function OnboardingScreen() {
             </Pressable>
           </View>
           <Text style={[styles.instruction, { color: colors.accent }]}>
-            {/* {committed ? "You're committed!" : "Tap and hold to get started."} */}
             Tap and hold to get started.
           </Text>
         </View>

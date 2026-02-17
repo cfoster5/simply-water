@@ -15,12 +15,15 @@ import { iOSUIKit } from "react-native-typography";
 
 import { HistoryListItem } from "@/components/HistoryListItem";
 import { useProStatus } from "@/hooks/useProStatus";
-import { promptAddEntry, useIntakeStore } from "@/stores/store";
+import { useAppConfigStore } from "@/stores/appConfig";
+import { useIntakeStore } from "@/stores/store";
+import { promptAddEntry } from "@/utils/promptAddEntry";
 
 const FREE_HISTORY_DAYS = 3;
 
 export default function HistoryScreen() {
   const { entries, removeEntries, addEntry } = useIntakeStore();
+  const unit = useAppConfigStore((state) => state.unit);
   const { bottom } = useSafeAreaInsets();
   const [isEditing, setIsEditing] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
@@ -77,7 +80,7 @@ export default function HistoryScreen() {
               onSelect={() =>
                 setSelectedKeys((prev) =>
                   prev.includes(key)
-                    ? prev.filter((k) => k !== key)
+                    ? prev.filter((selectedKey) => selectedKey !== key)
                     : [...prev, key],
                 )
               }
@@ -108,7 +111,7 @@ export default function HistoryScreen() {
                 { color: PlatformColor("systemBlue") },
               ]}
             >
-              {totalAmount} oz
+              {totalAmount} {unit}
             </Text>
           </View>
         )}
@@ -176,7 +179,7 @@ export default function HistoryScreen() {
                               { color: PlatformColor("systemBlue") },
                             ]}
                           >
-                            {section.totalAmount} oz
+                            {section.totalAmount} {unit}
                           </Text>
                         </View>
                         {section.data.slice(0, 3).map((item, i) => (
@@ -238,9 +241,7 @@ export default function HistoryScreen() {
       {entries.length > 0 && (
         <Stack.Toolbar placement="right">
           {!isPro && (
-            <Stack.Toolbar.Button
-              onPress={() => router.push("/paywall")}
-            >
+            <Stack.Toolbar.Button onPress={() => router.push("/paywall")}>
               <Stack.Toolbar.Label>Pro</Stack.Toolbar.Label>
             </Stack.Toolbar.Button>
           )}

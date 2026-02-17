@@ -1,7 +1,7 @@
 import { GlassView } from "expo-glass-effect";
 import { Image } from "expo-image";
 import { Color, router } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -13,6 +13,8 @@ import Purchases from "react-native-purchases";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
+const SUCCESS_DISPLAY_MS = 2000;
+
 export default function PaywallScreen() {
   const { top: topInset, bottom: bottomInset } = useSafeAreaInsets();
   const [loading, setLoading] = useState(false);
@@ -21,6 +23,7 @@ export default function PaywallScreen() {
     priceString: string;
     title: string;
   } | null>(null);
+  const packageRef = useRef<any>(null);
 
   useEffect(() => {
     async function loadOffering() {
@@ -32,13 +35,16 @@ export default function PaywallScreen() {
           (p) => p.packageType === "LIFETIME",
         );
         if (pkg) {
+          packageRef.current = pkg;
           setProduct({
             priceString: pkg.product.priceString,
             title: pkg.product.title,
           });
         }
-      } catch {
-        // fall through
+      } catch (error: any) {
+        if (!error.userCancelled) {
+          console.error("Failed to load offerings:", error);
+        }
       }
     }
     loadOffering();
@@ -47,25 +53,25 @@ export default function PaywallScreen() {
   const handlePurchase = useCallback(async () => {
     setLoading(true);
     try {
-      const offerings = await Purchases.getOfferings();
-      const currentOffering = offerings.current;
-      if (!currentOffering) {
-        setLoading(false);
-        return;
+      if (!packageRef.current) {
+        const offerings = await Purchases.getOfferings();
+        const pkg = offerings.current?.availablePackages.find(
+          (p) => p.packageType === "LIFETIME",
+        );
+        if (!pkg) {
+          setLoading(false);
+          return;
+        }
+        packageRef.current = pkg;
       }
-      const pkg = currentOffering.availablePackages.find(
-        (p) => p.packageType === "LIFETIME",
-      );
-      if (pkg) {
-        await Purchases.purchasePackage(pkg);
-        setLoading(false);
-        setPurchased(true);
-        setTimeout(() => router.back(), 2000);
-        return;
-      }
+      await Purchases.purchasePackage(packageRef.current);
       setLoading(false);
-    } catch {
-      // user cancelled or error
+      setPurchased(true);
+      setTimeout(() => router.back(), SUCCESS_DISPLAY_MS);
+    } catch (error: any) {
+      if (!error.userCancelled) {
+        console.error("Purchase failed:", error);
+      }
       setLoading(false);
     }
   }, []);
@@ -76,9 +82,11 @@ export default function PaywallScreen() {
       await Purchases.restorePurchases();
       setLoading(false);
       setPurchased(true);
-      setTimeout(() => router.back(), 2000);
-    } catch {
-      // error
+      setTimeout(() => router.back(), SUCCESS_DISPLAY_MS);
+    } catch (error: any) {
+      if (!error.userCancelled) {
+        console.error("Restore failed:", error);
+      }
       setLoading(false);
     }
   }, []);
@@ -147,11 +155,7 @@ export default function PaywallScreen() {
       </View>
 
       <View style={styles.actions}>
-        <Pressable
-          onPress={handlePurchase}
-          disabled={loading}
-          // style={({ pressed }) => [styles.button, pressed && { opacity: 0.8 }]}
-        >
+        <Pressable onPress={handlePurchase} disabled={loading}>
           <GlassView
             isInteractive
             style={styles.button}

@@ -4,9 +4,7 @@ import { useCallback, useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
-import { useAppConfigStore } from "@/stores/appConfig";
-
-type Unit = "oz" | "ml";
+import { useAppConfigStore, type Unit } from "@/stores/appConfig";
 
 export default function GoalScreen() {
   const { dailyGoal, unit, setDailyGoal, setUnit } = useAppConfigStore();
@@ -26,10 +24,10 @@ export default function GoalScreen() {
   }, [goalText, selectedUnit, setDailyGoal, setUnit]);
 
   const handleUnitToggle = useCallback(
-    (u: Unit) => {
-      if (u === selectedUnit) return;
+    (unit: Unit) => {
+      if (unit === selectedUnit) return;
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      setSelectedUnit(u);
+      setSelectedUnit(unit);
     },
     [selectedUnit],
   );
@@ -60,13 +58,13 @@ export default function GoalScreen() {
           autoFocus
         />
         <View style={styles.unitToggle}>
-          {(["oz", "ml"] as const).map((u) => (
+          {(["oz", "ml"] as const).map((unitOption) => (
             <Pressable
-              key={u}
-              onPress={() => handleUnitToggle(u)}
+              key={unitOption}
+              onPress={() => handleUnitToggle(unitOption)}
               style={[
                 styles.unitButton,
-                selectedUnit === u && styles.unitButtonActive,
+                selectedUnit === unitOption && styles.unitButtonActive,
               ]}
             >
               <Text
@@ -74,13 +72,13 @@ export default function GoalScreen() {
                   styles.unitText,
                   {
                     color:
-                      selectedUnit === u
+                      selectedUnit === unitOption
                         ? "#fff"
                         : (Color.ios.secondaryLabel as string),
                   },
                 ]}
               >
-                {u}
+                {unitOption}
               </Text>
             </Pressable>
           ))}

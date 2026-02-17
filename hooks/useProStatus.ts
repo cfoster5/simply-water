@@ -45,13 +45,10 @@ export function useProStatus() {
       try {
         await purchasesReady;
         const customerInfo = await Purchases.getCustomerInfo();
-        if (hasActiveEntitlement(customerInfo)) {
-          setIsPro(true);
-        } else if (isGrandfatheredUser(customerInfo)) {
-          setIsPro(true);
-        } else {
-          setIsPro(false);
-        }
+        setIsPro(
+          hasActiveEntitlement(customerInfo) ||
+            isGrandfatheredUser(customerInfo),
+        );
       } catch {
         setIsPro(false);
       }

@@ -1,17 +1,10 @@
 import { getLocales } from "expo-localization";
-import { MMKV } from "react-native-mmkv";
 import { create } from "zustand";
-import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
+import { persist, createJSONStorage } from "zustand/middleware";
 
-const storage = new MMKV();
+import { zustandStorage } from "@/lib/storage";
 
-const zustandStorage: StateStorage = {
-  setItem: (name, value) => storage.set(name, value),
-  getItem: (name) => storage.getString(name) ?? null,
-  removeItem: (name) => storage.delete(name),
-};
-
-type Unit = "oz" | "ml";
+export type Unit = "oz" | "ml";
 
 type AppConfigState = {
   hasRequestedReview: boolean;

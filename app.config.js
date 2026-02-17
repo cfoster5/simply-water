@@ -68,6 +68,12 @@ export default {
       eas: {
         projectId: "f702d13d-0324-49e1-9db5-794e71956f21",
       },
+      revenueCatIosApiKey:
+        process.env.REVENUECAT_IOS_API_KEY ??
+        "appl_yNjgyIuoWSDGgSPVQNEAcPJroUP",
+      revenueCatAndroidApiKey:
+        process.env.REVENUECAT_ANDROID_API_KEY ??
+        "test_ZrOYeUYbXnwNLjPdTgpqswiaRNQ",
     },
   },
 };

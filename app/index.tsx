@@ -1,9 +1,6 @@
 import { getAnalytics } from "@react-native-firebase/analytics";
-import { GlassView, isLiquidGlassAvailable } from "expo-glass-effect";
-import { Image } from "expo-image";
 import { router, Stack } from "expo-router";
 import * as StoreReview from "expo-store-review";
-import { SFSymbol } from "expo-symbols";
 import { useEffect } from "react";
 import {
   Alert,
@@ -16,69 +13,14 @@ import {
 } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
+import { CircleButton } from "@/components/CircleButton";
 import { ThemedView } from "@/components/ThemedView";
-// import { dummyEntries as entries } from "@/constants/dummyEntries";
 import { useAppConfigStore } from "@/stores/appConfig";
-import { promptAddEntry, useIntakeStore } from "@/stores/store";
+import { useIntakeStore } from "@/stores/store";
+import { promptAddEntry } from "@/utils/promptAddEntry";
 
-type CircleButtonProps = {
-  handlePress: () => void;
-  symbolName?: SFSymbol;
-  label?: string;
-};
-
-const isGlassAvailable = isLiquidGlassAvailable();
-
-const Button = ({ handlePress, symbolName, label }: CircleButtonProps) => {
-  const { width } = useWindowDimensions();
-  const size = width / 6;
-
-  const content = symbolName ? (
-    <Image
-      source={symbolName}
-      style={{ height: size / 2.5, width: size / 2.5 }}
-      tintColor="white"
-    />
-  ) : label ? (
-    <Text style={iOSUIKit.bodyEmphasizedWhite}>{label}</Text>
-  ) : null;
-
-  if (isGlassAvailable) {
-    return (
-      <Pressable onPress={handlePress}>
-        <GlassView
-          isInteractive
-          tintColor={iOSColors.blue}
-          style={{
-            minWidth: size,
-            minHeight: size,
-            borderRadius: size / 2,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {content}
-        </GlassView>
-      </Pressable>
-    );
-  }
-
-  return (
-    <Pressable
-      onPress={handlePress}
-      style={{
-        backgroundColor: iOSColors.blue,
-        minWidth: size,
-        minHeight: size,
-        borderRadius: size / 2,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {content}
-    </Pressable>
-  );
-};
+const ORBIT_GAP = 32;
+const PRESET_AMOUNTS = [8, 12, 16];
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
@@ -125,14 +67,12 @@ export default function HomeScreen() {
 
   const mainRadius = width / 4;
   const buttonSize = width / 6;
-  const gap = 32;
-  const orbitRadius = mainRadius + buttonSize / 2 + gap;
+  const orbitRadius = mainRadius + buttonSize / 2 + ORBIT_GAP;
   // Container needs to fit the main circle + orbiting buttons above
   const containerWidth = (orbitRadius + buttonSize / 2) * 2;
   const containerHeight = orbitRadius + buttonSize / 2 + mainRadius;
 
-  const presets = [8, 12, 16];
-  const topButtons = presets.map((amount) => ({
+  const topButtons = PRESET_AMOUNTS.map((amount) => ({
     handlePress: () => {
       const entryDate = new Date().toLocaleDateString();
       const time = new Date().toLocaleTimeString();
@@ -236,7 +176,7 @@ export default function HomeScreen() {
                   top: y,
                 }}
               >
-                <Button handlePress={btn.handlePress} label={btn.label} />
+                <CircleButton handlePress={btn.handlePress} label={btn.label} />
               </View>
             );
           })}
@@ -250,7 +190,7 @@ export default function HomeScreen() {
             marginTop: 32,
           }}
         >
-          <Button
+          <CircleButton
             handlePress={() => {
               Alert.alert(
                 "Reset Today's Entries?",
@@ -263,7 +203,7 @@ export default function HomeScreen() {
             }}
             symbolName="sf:arrow.counterclockwise"
           />
-          <Button
+          <CircleButton
             handlePress={() => promptAddEntry(addEntry)}
             symbolName="sf:plus"
           />
