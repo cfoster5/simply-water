@@ -16,6 +16,7 @@ import { iOSUIKit } from "react-native-typography";
 export default function PaywallScreen() {
   const { top: topInset, bottom: bottomInset } = useSafeAreaInsets();
   const [loading, setLoading] = useState(false);
+  const [purchased, setPurchased] = useState(false);
   const [product, setProduct] = useState<{
     priceString: string;
     title: string;
@@ -25,11 +26,12 @@ export default function PaywallScreen() {
     async function loadOffering() {
       try {
         const offerings = await Purchases.getOfferings();
-        const pkg = offerings.current?.availablePackages.find(
-          (p) => p.product.identifier === "water_199_lifetime",
+        const currentOffering = offerings.current;
+        if (!currentOffering) return;
+        const pkg = currentOffering.availablePackages.find(
+          (p) => p.packageType === "LIFETIME",
         );
         if (pkg) {
-          console.log("Found package:", pkg.product);
           setProduct({
             priceString: pkg.product.priceString,
             title: pkg.product.title,
@@ -46,16 +48,24 @@ export default function PaywallScreen() {
     setLoading(true);
     try {
       const offerings = await Purchases.getOfferings();
-      const pkg = offerings.current?.availablePackages.find(
-        (p) => p.product.identifier === "water_199_lifetime",
+      const currentOffering = offerings.current;
+      if (!currentOffering) {
+        setLoading(false);
+        return;
+      }
+      const pkg = currentOffering.availablePackages.find(
+        (p) => p.packageType === "LIFETIME",
       );
       if (pkg) {
         await Purchases.purchasePackage(pkg);
-        router.back();
+        setLoading(false);
+        setPurchased(true);
+        setTimeout(() => router.back(), 2000);
+        return;
       }
+      setLoading(false);
     } catch {
       // user cancelled or error
-    } finally {
       setLoading(false);
     }
   }, []);
@@ -64,13 +74,50 @@ export default function PaywallScreen() {
     setLoading(true);
     try {
       await Purchases.restorePurchases();
-      router.back();
+      setLoading(false);
+      setPurchased(true);
+      setTimeout(() => router.back(), 2000);
     } catch {
       // error
-    } finally {
       setLoading(false);
     }
   }, []);
+
+  if (purchased) {
+    return (
+      <Pressable
+        style={[
+          styles.container,
+          {
+            marginTop: topInset,
+            marginBottom: bottomInset,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        ]}
+        onPress={() => router.back()}
+      >
+        <Text style={{ fontSize: 48, marginBottom: 16 }}>🎉</Text>
+        <Text
+          style={[iOSUIKit.largeTitleEmphasized, { color: Color.ios.label }]}
+        >
+          Thank You!
+        </Text>
+        <Text
+          style={[
+            iOSUIKit.body,
+            {
+              color: Color.ios.secondaryLabel,
+              textAlign: "center",
+              marginTop: 8,
+            },
+          ]}
+        >
+          You're now a Pro member. Enjoy unlimited history!
+        </Text>
+      </Pressable>
+    );
+  }
 
   return (
     <View
@@ -120,7 +167,11 @@ export default function PaywallScreen() {
           </GlassView>
         </Pressable>
 
-        <Pressable onPress={handleRestore} disabled={loading}>
+        <Pressable
+          onPress={handleRestore}
+          disabled={loading}
+          style={{ minHeight: 44, justifyContent: "center" }}
+        >
           <Text
             style={[
               iOSUIKit.footnote,

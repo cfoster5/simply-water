@@ -9,11 +9,10 @@ import { router, Stack, useGlobalSearchParams, usePathname } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { Platform } from "react-native";
-import Purchases, { LOG_LEVEL } from "react-native-purchases";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { configurePurchases } from "@/lib/purchases";
 import { useAppConfigStore } from "@/stores/appConfig";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -31,17 +30,7 @@ export default function RootLayout() {
   );
 
   useEffect(() => {
-    Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
-
-    // Platform-specific API keys
-    const iosApiKey = "test_ZrOYeUYbXnwNLjPdTgpqswiaRNQ";
-    const androidApiKey = "test_ZrOYeUYbXnwNLjPdTgpqswiaRNQ";
-
-    if (Platform.OS === "ios") {
-      Purchases.configure({ apiKey: iosApiKey });
-    } else if (Platform.OS === "android") {
-      Purchases.configure({ apiKey: androidApiKey });
-    }
+    configurePurchases();
     SplashScreen.hideAsync();
   }, []);
 

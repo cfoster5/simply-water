@@ -27,7 +27,7 @@ const commitments = [
 ];
 
 const STAGGER_BASE = 300;
-const STAGGER_STEP = 150;
+const STAGGER_STEP = 200;
 
 const palette = {
   light: {
@@ -143,7 +143,7 @@ export default function OnboardingScreen() {
                 key={line}
                 entering={FadeIn.delay(
                   STAGGER_BASE + i * STAGGER_STEP,
-                ).duration(200)}
+                ).duration(100)}
                 style={[styles.body, { color: colors.body }]}
               >
                 {line}

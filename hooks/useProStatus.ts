@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Platform } from "react-native";
 import Purchases, { type CustomerInfo } from "react-native-purchases";
+import { purchasesReady } from "@/lib/purchases";
 
 const ENTITLEMENT_ID = "Simply Water Pro";
 
@@ -42,6 +43,7 @@ export function useProStatus() {
 
     async function check() {
       try {
+        await purchasesReady;
         const customerInfo = await Purchases.getCustomerInfo();
         if (hasActiveEntitlement(customerInfo)) {
           setIsPro(true);
@@ -64,5 +66,5 @@ export function useProStatus() {
     };
   }, []);
 
-  return false;
+  return isPro;
 }
