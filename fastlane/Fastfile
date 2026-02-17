@@ -1,0 +1,26 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Push metadata to App Store Connect (no binary upload)"
+  lane :update_metadata do
+    deliver(
+      app_identifier: "com.cfoster.water",
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      force: true,
+      precheck_include_in_app_purchases: false,
+    )
+  end
+
+  desc "Preview metadata changes without uploading"
+  lane :preview_metadata do
+    deliver(
+      app_identifier: "com.cfoster.water",
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      precheck_include_in_app_purchases: false,
+      submit_for_review: false,
+      verify_only: true,
+    )
+  end
+end
