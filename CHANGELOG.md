@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.0](https://github.com/cfoster5/simply-water/compare/v1.12.0...v1.13.0) (2026-02-20)
+
+
+### Features
+
+* add streaks ([d280550](https://github.com/cfoster5/simply-water/commit/d2805501fd5708526d794c1f7d1b3d39ccfba187))
+
 ## [1.12.0](https://github.com/cfoster5/simply-water/compare/v1.11.0...v1.12.0) (2026-02-17)
 
 
