@@ -15,6 +15,15 @@ interface HistoryListItemProps {
   onSelect?: () => void;
 }
 
+function formatDisplayTime(date: string, time: string): string {
+  const parsed = new Date(`${date} ${time}`);
+  if (isNaN(parsed.getTime())) return time;
+  return parsed.toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
 export const HistoryListItem = ({
   item,
   isFirstItem,
@@ -55,7 +64,7 @@ export const HistoryListItem = ({
             },
           ]}
         >
-          {item.time}
+          {formatDisplayTime(item.date, item.time)}
         </Text>
       </View>
       <View style={{ alignItems: "center" }}>

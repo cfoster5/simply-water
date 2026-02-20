@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Platform } from "react-native";
 import Purchases, { type CustomerInfo } from "react-native-purchases";
+
 import { purchasesReady } from "@/lib/purchases";
 
 const ENTITLEMENT_ID = "Simply Water Pro";

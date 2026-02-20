@@ -1,5 +1,6 @@
 import { getAnalytics } from "@react-native-firebase/analytics";
-import { router, Stack } from "expo-router";
+import { Image } from "expo-image";
+import { Color, router, Stack } from "expo-router";
 import * as StoreReview from "expo-store-review";
 import { useEffect } from "react";
 import {
@@ -15,6 +16,8 @@ import { iOSColors, iOSUIKit } from "react-native-typography";
 
 import { CircleButton } from "@/components/CircleButton";
 import { ThemedView } from "@/components/ThemedView";
+import { getDayKey, toLocalDayKey } from "@/lib/dateUtils";
+import { getCurrentStreak, getGoalMetDates } from "@/lib/streakHelpers";
 import { useAppConfigStore } from "@/stores/appConfig";
 import { useIntakeStore } from "@/stores/store";
 import { promptAddEntry } from "@/utils/promptAddEntry";
@@ -25,7 +28,7 @@ const PRESET_AMOUNTS = [8, 12, 16];
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const { addEntry, entries, resetDailyEntries } = useIntakeStore();
-  const { hasRequestedReview, setHasRequestedReview, unit } =
+  const { hasRequestedReview, setHasRequestedReview, unit, dailyGoal } =
     useAppConfigStore();
 
   useEffect(() => {
@@ -41,12 +44,15 @@ export default function HomeScreen() {
     requestReview();
   }, [entries.length, hasRequestedReview, setHasRequestedReview]);
 
-  const currentDate = new Date().toLocaleDateString();
+  const todayKey = toLocalDayKey(new Date());
 
   const totalAmount =
     entries
-      .filter((entry) => entry.date === currentDate)
+      .filter((entry) => getDayKey(entry) === todayKey)
       .reduce((total, entry) => total + entry.amount, 0) || 0;
+
+  const goalMetDates = getGoalMetDates(entries, dailyGoal);
+  const streak = getCurrentStreak(goalMetDates);
 
   async function shareAppLink() {
     try {
@@ -75,7 +81,10 @@ export default function HomeScreen() {
   const topButtons = PRESET_AMOUNTS.map((amount) => ({
     handlePress: () => {
       const entryDate = new Date().toLocaleDateString();
-      const time = new Date().toLocaleTimeString();
+      const time = new Date().toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit",
+      });
       addEntry({ date: entryDate, time, amount });
     },
     label: `${amount}`,
@@ -160,6 +169,33 @@ export default function HomeScreen() {
               {unit}
             </Text>
             <Text style={iOSUIKit.bodyWhite}>today</Text>
+            {streak.count > 0 && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 4,
+                  marginTop: 8,
+                  opacity: streak.pending ? 0.55 : 0.85,
+                }}
+              >
+                <Image
+                  source="sf:flame.fill"
+                  tintColor={Color.ios.systemOrange as string}
+                  style={{ width: 14, height: 14 }}
+                />
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: 13,
+                    fontWeight: "600",
+                    fontVariant: ["tabular-nums"],
+                  }}
+                >
+                  {streak.count} {streak.count === 1 ? "day" : "days"}
+                </Text>
+              </View>
+            )}
           </Pressable>
 
           {/* Arc buttons */}

@@ -14,7 +14,10 @@ export function promptAddEntry(addEntry: (entry: Entry) => void) {
           const numericAmount = parseInt(amount ?? "", 10);
           if (!isNaN(numericAmount)) {
             const currentDate = new Date().toLocaleDateString();
-            const time = new Date().toLocaleTimeString();
+            const time = new Date().toLocaleTimeString([], {
+              hour: "numeric",
+              minute: "2-digit",
+            });
             addEntry({ date: currentDate, time, amount: numericAmount });
           }
         },

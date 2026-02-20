@@ -15,6 +15,12 @@ import { iOSUIKit } from "react-native-typography";
 
 import { HistoryListItem } from "@/components/HistoryListItem";
 import { useProStatus } from "@/hooks/useProStatus";
+import { getDayKey } from "@/lib/dateUtils";
+import {
+  getBestStreak,
+  getCurrentStreak,
+  getGoalMetDates,
+} from "@/lib/streakHelpers";
 import { useAppConfigStore } from "@/stores/appConfig";
 import { useIntakeStore } from "@/stores/store";
 import { promptAddEntry } from "@/utils/promptAddEntry";
@@ -23,33 +29,47 @@ const FREE_HISTORY_DAYS = 3;
 
 export default function HistoryScreen() {
   const { entries, removeEntries, addEntry } = useIntakeStore();
-  const unit = useAppConfigStore((state) => state.unit);
+  const { unit, dailyGoal } = useAppConfigStore();
   const { bottom } = useSafeAreaInsets();
   const [isEditing, setIsEditing] = useState(false);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const isPro = useProStatus();
+  const colorScheme = useColorScheme();
+
+  const goalMetDates = getGoalMetDates(entries, dailyGoal);
+  const streak = getCurrentStreak(goalMetDates);
+  const bestStreak = getBestStreak(goalMetDates);
 
   const reversedEntries = [...entries].reverse();
 
   const groupedEntries = reversedEntries.reduce(
     (acc, entry) => {
-      const date = entry.date;
-      if (!acc[date]) {
-        acc[date] = { data: [], totalAmount: 0 };
+      const key = getDayKey(entry);
+      if (!key) return acc;
+      if (!acc[key]) {
+        acc[key] = { data: [], totalAmount: 0 };
       }
-      acc[date].data.push(entry);
-      acc[date].totalAmount += entry.amount;
+      acc[key].data.push(entry);
+      acc[key].totalAmount += entry.amount;
       return acc;
     },
     {} as Record<string, { data: typeof reversedEntries; totalAmount: number }>,
   );
 
-  const allSections = Object.keys(groupedEntries).map((date, index) => ({
-    title: date,
-    data: groupedEntries[date].data,
-    totalAmount: groupedEntries[date].totalAmount,
-    index: index,
-  }));
+  const allSections = Object.keys(groupedEntries)
+    .sort((a, b) => b.localeCompare(a))
+    .map((key, index) => {
+      const [y, m, d] = key.split("-").map(Number);
+      const displayDate = new Date(y, m - 1, d).toLocaleDateString();
+      return {
+        dayKey: key,
+        title: displayDate,
+        data: groupedEntries[key].data,
+        totalAmount: groupedEntries[key].totalAmount,
+        goalMet: groupedEntries[key].totalAmount >= dailyGoal,
+        index,
+      };
+    });
 
   const sections = isPro
     ? allSections
@@ -57,7 +77,6 @@ export default function HistoryScreen() {
 
   const lockedSections = isPro ? [] : allSections.slice(FREE_HISTORY_DAYS);
   const hasLockedHistory = lockedSections.length > 0;
-  const colorScheme = useColorScheme();
 
   return (
     <>
@@ -65,11 +84,13 @@ export default function HistoryScreen() {
       <SectionList
         style={{ backgroundColor: PlatformColor("systemGroupedBackground") }}
         sections={sections}
-        keyExtractor={(item, index) => item.time + index}
+        keyExtractor={(item, index) =>
+          item.id ?? `${item.date}-${item.time}-${index}`
+        }
         renderItem={({ item, index, section }) => {
           const isFirstItem = index === 0;
           const isLastItem = index === section.data.length - 1;
-          const key = `${item.date}-${item.time}`;
+          const key = item.id ?? `${item.date}-${item.time}`;
           return (
             <HistoryListItem
               item={item}
@@ -87,7 +108,9 @@ export default function HistoryScreen() {
             />
           );
         }}
-        renderSectionHeader={({ section: { title, totalAmount, index } }) => (
+        renderSectionHeader={({
+          section: { title, totalAmount, goalMet, index },
+        }) => (
           <View
             style={{
               flexDirection: "row",
@@ -108,30 +131,107 @@ export default function HistoryScreen() {
             <Text
               style={[
                 iOSUIKit.title3Emphasized,
-                { color: PlatformColor("systemBlue") },
+                {
+                  color: goalMet
+                    ? PlatformColor("systemBlue")
+                    : PlatformColor("secondaryLabel"),
+                },
               ]}
             >
               {totalAmount} {unit}
             </Text>
           </View>
         )}
+        ListHeaderComponent={() => (
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 12,
+              paddingTop: 16,
+              paddingBottom: 8,
+            }}
+          >
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                paddingVertical: 12,
+                borderRadius: 10,
+                borderCurve: "continuous",
+                backgroundColor: PlatformColor(
+                  "secondarySystemGroupedBackground",
+                ),
+              }}
+            >
+              <Text
+                style={[
+                  iOSUIKit.title3Emphasized,
+                  {
+                    color: PlatformColor("systemBlue"),
+                    fontVariant: ["tabular-nums"],
+                  },
+                ]}
+              >
+                {streak.count}
+              </Text>
+              <Text
+                style={[
+                  iOSUIKit.caption2,
+                  { color: PlatformColor("secondaryLabel") },
+                ]}
+              >
+                Current Streak
+              </Text>
+            </View>
+
+            {isPro && (
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  paddingVertical: 12,
+                  borderRadius: 10,
+                  borderCurve: "continuous",
+                  backgroundColor: PlatformColor(
+                    "secondarySystemGroupedBackground",
+                  ),
+                }}
+              >
+                <Text
+                  style={[
+                    iOSUIKit.title3Emphasized,
+                    {
+                      color: PlatformColor("systemBlue"),
+                      fontVariant: ["tabular-nums"],
+                    },
+                  ]}
+                >
+                  {bestStreak}
+                </Text>
+                <Text
+                  style={[
+                    iOSUIKit.caption2,
+                    { color: PlatformColor("secondaryLabel") },
+                  ]}
+                >
+                  Best Streak
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
         stickySectionHeadersEnabled={false}
-        {...(sections.length > 0 && {
-          automaticallyAdjustsScrollIndicatorInsets: true,
-          contentInsetAdjustmentBehavior: "automatic" as const,
-          contentInset: { bottom },
-        })}
+        automaticallyAdjustsScrollIndicatorInsets
+        contentInsetAdjustmentBehavior="automatic"
+        contentInset={{ bottom }}
         scrollIndicatorInsets={{ bottom }}
         contentContainerStyle={{
           paddingHorizontal: 16,
-          // If there are no sections, we want the content to take up the full height so that the empty state is centered
-          ...(sections.length === 0 && { flexGrow: 1 }),
         }}
         ListEmptyComponent={() => (
           <View
             style={{
-              flex: 1,
-              justifyContent: "center",
+              paddingTop: 48,
               alignItems: "center",
             }}
           >
@@ -144,7 +244,7 @@ export default function HistoryScreen() {
                 },
               ]}
             >
-              Press the + button below to add entries!
+              Start logging today to build your streak!
             </Text>
           </View>
         )}
@@ -155,7 +255,7 @@ export default function HistoryScreen() {
                   {/* Blurred preview of locked entries */}
                   <View style={{ pointerEvents: "none" }}>
                     {lockedSections.slice(0, 2).map((section) => (
-                      <View key={section.title}>
+                      <View key={section.dayKey}>
                         <View
                           style={{
                             flexDirection: "row",
@@ -184,7 +284,7 @@ export default function HistoryScreen() {
                         </View>
                         {section.data.slice(0, 3).map((item, i) => (
                           <HistoryListItem
-                            key={`${item.date}-${item.time}`}
+                            key={item.id ?? `${item.date}-${item.time}-${i}`}
                             item={item}
                             isFirstItem={i === 0}
                             isLastItem={
@@ -218,18 +318,7 @@ export default function HistoryScreen() {
                           { color: Color.ios.label },
                         ]}
                       >
-                        Unlock Full History
-                      </Text>
-                      <Text
-                        style={[
-                          iOSUIKit.body,
-                          {
-                            color: Color.ios.secondaryLabel,
-                            textAlign: "center",
-                          },
-                        ]}
-                      >
-                        Upgrade to Pro to see all your history
+                        Unlock Full History & Best Streak
                       </Text>
                     </BlurView>
                   </Pressable>
