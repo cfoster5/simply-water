@@ -35,7 +35,7 @@ function hasActiveEntitlement(customerInfo: CustomerInfo): boolean {
 }
 
 export function useProStatus() {
-  const [isPro, setIsPro] = useState(false);
+  const [isPro, setIsPro] = useState<boolean | null>(null);
 
   useEffect(() => {
     const customerInfoListener = (info: CustomerInfo) => {

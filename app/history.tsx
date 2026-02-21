@@ -1,6 +1,6 @@
 import { BlurView } from "expo-blur";
 import { Color, router, Stack } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   PlatformColor,
   Pressable,
@@ -28,7 +28,8 @@ import { promptAddEntry } from "@/utils/promptAddEntry";
 const FREE_HISTORY_DAYS = 3;
 
 export default function HistoryScreen() {
-  const { entries, removeEntries, addEntry } = useIntakeStore();
+  const { entries, lockPastDays, lockedDayStatuses, removeEntries, addEntry } =
+    useIntakeStore();
   const { unit, dailyGoal } = useAppConfigStore();
   const { bottom } = useSafeAreaInsets();
   const [isEditing, setIsEditing] = useState(false);
@@ -36,9 +37,13 @@ export default function HistoryScreen() {
   const isPro = useProStatus();
   const colorScheme = useColorScheme();
 
-  const goalMetDates = getGoalMetDates(entries, dailyGoal);
+  const goalMetDates = getGoalMetDates(entries, dailyGoal, lockedDayStatuses);
   const streak = getCurrentStreak(goalMetDates);
   const bestStreak = getBestStreak(goalMetDates);
+
+  useEffect(() => {
+    lockPastDays();
+  }, [entries.length, dailyGoal, lockPastDays]);
 
   const reversedEntries = [...entries].reverse();
 
@@ -329,7 +334,7 @@ export default function HistoryScreen() {
       />
       {entries.length > 0 && (
         <Stack.Toolbar placement="right">
-          {!isPro && (
+          {isPro === false && (
             <Stack.Toolbar.Button onPress={() => router.push("/paywall")}>
               <Stack.Toolbar.Label>Pro</Stack.Toolbar.Label>
             </Stack.Toolbar.Button>
