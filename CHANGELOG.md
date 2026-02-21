@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.13.1](https://github.com/cfoster5/simply-water/compare/v1.13.0...v1.13.1) (2026-02-21)
+
+
+### Bug Fixes
+
+* implement legacy date parsing for dayKey retrieval ([c7b4db6](https://github.com/cfoster5/simply-water/commit/c7b4db65826989aacf390da34e5cce393509016a))
+* lock past streak days and keep today live ([e63d72c](https://github.com/cfoster5/simply-water/commit/e63d72ce2ce135d5cab003b3162f41d3e13c6b37))
+* prevent Pro header button from flashing on History screen ([4fd6dbd](https://github.com/cfoster5/simply-water/commit/4fd6dbd5f00c5223d50895e2cd89564e5452a193))
+
 ## [1.13.0](https://github.com/cfoster5/simply-water/compare/v1.12.0...v1.13.0) (2026-02-20)
 
 
