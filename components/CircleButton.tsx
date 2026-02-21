@@ -1,12 +1,14 @@
 import { GlassView, isLiquidGlassAvailable } from "expo-glass-effect";
 import { Image } from "expo-image";
-import { SFSymbol } from "expo-symbols";
+import type { ComponentProps } from "react";
 import { Pressable, Text, useWindowDimensions } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
+type ImageSource = NonNullable<ComponentProps<typeof Image>["source"]>;
+
 type CircleButtonProps = {
   handlePress: () => void;
-  symbolName?: SFSymbol;
+  symbolName?: ImageSource;
   label?: string;
 };
 

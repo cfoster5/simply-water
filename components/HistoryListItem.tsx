@@ -47,10 +47,11 @@ export const HistoryListItem = ({
         borderColor: PlatformColor("separator"),
         borderBottomWidth: !isLastItem ? StyleSheet.hairlineWidth : 0,
         paddingHorizontal: 16,
-        borderTopLeftRadius: isFirstItem ? 10 : 0,
-        borderTopRightRadius: isFirstItem ? 10 : 0,
-        borderBottomLeftRadius: isLastItem ? 10 : 0,
-        borderBottomRightRadius: isLastItem ? 10 : 0,
+        borderTopLeftRadius: isFirstItem ? 26 : 0,
+        borderTopRightRadius: isFirstItem ? 26 : 0,
+        borderBottomLeftRadius: isLastItem ? 26 : 0,
+        borderBottomRightRadius: isLastItem ? 26 : 0,
+        borderCurve: "continuous",
       }}
     >
       <View style={{ flexDirection: "row", alignItems: "center" }}>

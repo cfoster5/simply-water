@@ -136,7 +136,6 @@ export default function HomeScreen() {
           <Stack.Toolbar.Label>History</Stack.Toolbar.Label>
         </Stack.Toolbar.Button>
       </Stack.Toolbar>
-
       <View
         style={{
           flex: 1,
@@ -159,12 +158,17 @@ export default function HomeScreen() {
               backgroundColor: iOSColors.blue,
               width: mainRadius * 2,
               height: mainRadius * 2,
-              borderRadius: "100%",
+              borderRadius: mainRadius,
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <Text style={iOSUIKit.largeTitleEmphasizedWhite}>
+            <Text
+              style={[
+                iOSUIKit.largeTitleEmphasizedWhite,
+                { fontVariant: ["tabular-nums"] },
+              ]}
+            >
               {totalAmount}
               {unit}
             </Text>
@@ -185,12 +189,10 @@ export default function HomeScreen() {
                   style={{ width: 14, height: 14 }}
                 />
                 <Text
-                  style={{
-                    color: "white",
-                    fontSize: 13,
-                    fontWeight: "600",
-                    fontVariant: ["tabular-nums"],
-                  }}
+                  style={[
+                    iOSUIKit.footnoteEmphasized,
+                    { color: "white", fontVariant: ["tabular-nums"] },
+                  ]}
                 >
                   {streak.count} {streak.count === 1 ? "day" : "days"}
                 </Text>

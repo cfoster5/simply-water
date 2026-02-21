@@ -1,4 +1,4 @@
-import { SymbolView } from "expo-symbols";
+import { Image } from "expo-image";
 import { PlatformColor, StyleSheet, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
@@ -22,11 +22,10 @@ export const RadioButton = ({ isSelected }: RadioButtonProps) => (
   <View style={[styles.shared, styles.outer]}>
     {isSelected && (
       <View style={[styles.shared, styles.fill]}>
-        <SymbolView
-          name="checkmark"
+        <Image
+          source="sf:checkmark"
           tintColor="white"
-          size={circleDiameter - 8}
-          resizeMode="scaleAspectFit"
+          style={{ height: circleDiameter - 8, width: circleDiameter - 8 }}
         />
       </View>
     )}

@@ -156,7 +156,7 @@ export default function HistoryScreen() {
                 flex: 1,
                 alignItems: "center",
                 paddingVertical: 12,
-                borderRadius: 10,
+                borderRadius: 26,
                 borderCurve: "continuous",
                 backgroundColor: PlatformColor(
                   "secondarySystemGroupedBackground",
@@ -176,7 +176,7 @@ export default function HistoryScreen() {
               </Text>
               <Text
                 style={[
-                  iOSUIKit.caption2,
+                  iOSUIKit.footnote,
                   { color: PlatformColor("secondaryLabel") },
                 ]}
               >
@@ -190,7 +190,7 @@ export default function HistoryScreen() {
                   flex: 1,
                   alignItems: "center",
                   paddingVertical: 12,
-                  borderRadius: 10,
+                  borderRadius: 26,
                   borderCurve: "continuous",
                   backgroundColor: PlatformColor(
                     "secondarySystemGroupedBackground",
@@ -210,7 +210,7 @@ export default function HistoryScreen() {
                 </Text>
                 <Text
                   style={[
-                    iOSUIKit.caption2,
+                    iOSUIKit.footnote,
                     { color: PlatformColor("secondaryLabel") },
                   ]}
                 >
