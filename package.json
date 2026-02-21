@@ -16,11 +16,9 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@bacons/apple-colors": "^0.0.8",
     "@dev-plugins/react-native-mmkv": "~0.2.0",
     "@expo/metro-runtime": "~55.0.5",
     "@expo/ui": "~55.0.0-preview.5",
-    "@expo/vector-icons": "^15.0.3",
     "@react-native-firebase/analytics": "^23.3.1",
     "@react-native-firebase/app": "^23.3.1",
     "expo": "^55.0.0-preview.10",
@@ -38,7 +36,6 @@
     "expo-splash-screen": "~55.0.5",
     "expo-status-bar": "~55.0.2",
     "expo-store-review": "~55.0.5",
-    "expo-symbols": "~55.0.3",
     "expo-system-ui": "~55.0.5",
     "expo-web-browser": "~55.0.5",
     "react": "19.2.0",
