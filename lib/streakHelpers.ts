@@ -6,7 +6,9 @@ import { getDayKey, toLocalDayKey } from "./dateUtils";
 export function getGoalMetDates(
   entries: Entry[],
   dailyGoal: number,
+  lockedDayStatuses: Record<string, boolean> = {},
 ): Set<string> {
+  const todayKey = toLocalDayKey(new Date());
   const dailyTotals = new Map<string, number>();
   for (const entry of entries) {
     const key = getDayKey(entry);
@@ -14,8 +16,28 @@ export function getGoalMetDates(
     dailyTotals.set(key, (dailyTotals.get(key) ?? 0) + entry.amount);
   }
   const result = new Set<string>();
-  for (const [key, total] of dailyTotals) {
-    if (total >= dailyGoal) result.add(key);
+
+  for (const [dayKey, isMet] of Object.entries(lockedDayStatuses)) {
+    if (dayKey < todayKey && isMet) {
+      result.add(dayKey);
+    }
+  }
+
+  for (const [dayKey, total] of dailyTotals) {
+    if (dayKey === todayKey) {
+      if (total >= dailyGoal) result.add(dayKey);
+      continue;
+    }
+
+    if (dayKey < todayKey) {
+      if (Object.prototype.hasOwnProperty.call(lockedDayStatuses, dayKey)) {
+        continue;
+      }
+      if (total >= dailyGoal) result.add(dayKey);
+      continue;
+    }
+
+    if (total >= dailyGoal) result.add(dayKey);
   }
   return result;
 }

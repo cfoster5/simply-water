@@ -27,7 +27,8 @@ const PRESET_AMOUNTS = [8, 12, 16];
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
-  const { addEntry, entries, resetDailyEntries } = useIntakeStore();
+  const { addEntry, entries, lockPastDays, lockedDayStatuses, resetDailyEntries } =
+    useIntakeStore();
   const { hasRequestedReview, setHasRequestedReview, unit, dailyGoal } =
     useAppConfigStore();
 
@@ -44,6 +45,10 @@ export default function HomeScreen() {
     requestReview();
   }, [entries.length, hasRequestedReview, setHasRequestedReview]);
 
+  useEffect(() => {
+    lockPastDays();
+  }, [entries.length, dailyGoal, lockPastDays]);
+
   const todayKey = toLocalDayKey(new Date());
 
   const totalAmount =
@@ -51,7 +56,7 @@ export default function HomeScreen() {
       .filter((entry) => getDayKey(entry) === todayKey)
       .reduce((total, entry) => total + entry.amount, 0) || 0;
 
-  const goalMetDates = getGoalMetDates(entries, dailyGoal);
+  const goalMetDates = getGoalMetDates(entries, dailyGoal, lockedDayStatuses);
   const streak = getCurrentStreak(goalMetDates);
 
   async function shareAppLink() {
